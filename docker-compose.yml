@@ -1,0 +1,34 @@
+version: '3.0'
+services:
+  mariadb:
+    image: mariadb
+    container_name: thot-database-develop
+    volumes:
+      - thot-database-develop:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: lemontech
+    ports:
+      - 3306:3306
+    networks:
+      webapp:
+        ipv4_address: 26.0.0.2
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: thot-phpmyadmin-develop
+    environment:
+      PMA_HOST:  26.0.0.2
+    links:
+      - "mariadb:mysql"
+    ports:
+      - 7000:80
+    networks:
+      webapp:
+        ipv4_address: 26.0.0.3
+volumes:
+  thot-database-develop:
+networks:
+  webapp:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 26.0.0.0/24
