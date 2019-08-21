@@ -2,9 +2,9 @@ version: '3.0'
 services:
   mariadb:
     image: mariadb
-    container_name: thot-database-develop
+    container_name: limoneno-database-develop
     volumes:
-      - thot-database-develop:/var/lib/mysql
+      - limoneno-database-develop:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: lemontech
     ports:
@@ -14,7 +14,7 @@ services:
         ipv4_address: 26.0.0.2
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: thot-phpmyadmin-develop
+    container_name: limoneno-phpmyadmin-develop
     environment:
       PMA_HOST:  26.0.0.2
     links:
@@ -25,7 +25,7 @@ services:
       webapp:
         ipv4_address: 26.0.0.3
 volumes:
-  thot-database-develop:
+  limoneno-database-develop:
 networks:
   webapp:
     driver: bridge
