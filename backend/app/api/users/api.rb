@@ -32,13 +32,12 @@ class Users::API < Grape::API
     user = User.find_by_email(email)
     if user && user.authenticate(params[:password])
       status 200
-      user = user.to_json
-      user.delete("password_digest")
-      puts user
-      token = JsonWebToken.encode(user)
+      user_json = user.to_json
+      token = JsonWebToken.encode(user_json)
 
       {
-        token: token
+        token: token,
+        user: user
       }
     else
       status 401
