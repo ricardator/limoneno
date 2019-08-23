@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './containers/app/App';
-import { BrowserRouter as Router } from "react-router-dom";
+import RegisterContainer from './containers/register/register';
+import LoginContainer from './containers/login/login';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import * as serviceWorker from './serviceWorker';
 import { createStore, applyMiddleware} from 'redux';
 import { Provider } from 'react-redux';
@@ -15,7 +17,11 @@ ReactDOM.render(
   // And create the App with redux storage
   <Provider store={ store }>
     <Router>
-      <App />
+      <Switch>
+        <Route path={`/login`} component={LoginContainer} />
+        <Route path={`/register`} component={RegisterContainer} />
+        <Route path={`/`} component={App} />
+      </Switch>
     </Router>
   </Provider>,
   document.getElementById('root') as HTMLElement
