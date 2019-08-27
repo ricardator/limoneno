@@ -67,6 +67,14 @@ module Versions
         
         Project.destroy(id);
 
+        ProjectUser.destroy({
+          project_id: id
+        })
+
+        ProjectDataset.destroy({
+          project_id: id
+        })
+
         status 204
       end
 
@@ -202,8 +210,6 @@ module Versions
 
             status 200
             projects_stats
-          rescue
-            status 500
           end
 
           route_param :project_id do
