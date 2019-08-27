@@ -63,7 +63,7 @@ export class HeaderComponent extends React.Component {
             {/* <Link to="/dashboard"><div className="item">Dashboard</div></Link> */}
             <Link to="/workspace"><div className="item">Espacio de trabajo</div></Link>
             <Link to="/projects"><div className="item">Proyectos</div></Link>
-            <Link to="/datasets"><div className="item">Datasets</div></Link>
+            <Link to="/datasets"><div className="item">Sets de Documentos</div></Link>
           </div>
           <div className="menu">
           <Dropdown overlay={this.menu()}>

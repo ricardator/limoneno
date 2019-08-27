@@ -18,21 +18,16 @@ export default class ProjectService {
 
   public getProjects(): Observable<Project[]> {
     return new Observable<Project[]>(observe => {
-      if (this.projects.length === 0) {
-        RestService.get('projects').subscribe(response => {
-          this.projects = response.data.map((project: any) => {
-            return new Project(project);
-          });
-          observe.next(this.projects);
-          observe.complete();
-        }, error => {
-          observe.error(error);
-          observe.complete();
+      RestService.get('projects').subscribe(response => {
+        this.projects = response.data.map((project: any) => {
+          return new Project(project);
         });
-      } else {
-          observe.next(this.projects);
-          observe.complete();
-      }
+        observe.next(this.projects);
+        observe.complete();
+      }, error => {
+        observe.error(error);
+        observe.complete();
+      });
     });
   }
 

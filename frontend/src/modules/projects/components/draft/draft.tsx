@@ -117,6 +117,10 @@ export class DraftProjectComponent extends React.Component<any> {
       ProjectService.getInstance().create(this.state.project).subscribe(data => {
         this.props.history.push("/projects")
       });
+    } else {
+      this.setState({
+        loading: false
+      });
     }
   }
 

@@ -85,7 +85,7 @@ module Versions
       delete ':id' do
         id = params[:id]
         
-        User.destroy(id);
+        User.find(id).delete;
 
         status 204
       end

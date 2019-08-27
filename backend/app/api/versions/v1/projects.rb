@@ -65,15 +65,15 @@ module Versions
       delete ':id' do
         id = params[:id]
         
-        Project.destroy(id);
-
-        ProjectUser.destroy({
+        ProjectUser.where({
           project_id: id
-        })
+        }).delete_all
 
-        ProjectDataset.destroy({
+        ProjectDataset.where({
           project_id: id
-        })
+        }).delete_all
+
+        Project.delete(id);
 
         status 204
       end

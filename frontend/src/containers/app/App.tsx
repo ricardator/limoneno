@@ -35,7 +35,7 @@ class App extends React.Component{
           <div className="app__container">
             <Router history={this.props.history}>
               <Switch>
-                <Route exact path={`/`} component={DashboardComponent} />
+                <Route exact path={`/`} component={WorkspaceComponent} />
                 <Route path={`/users`} component={UsersComponent} />
                 <Route path={`/profile`} component={ProfileComponent} />
                 <Route path={`/projects`} component={ProjectsComponent} />

@@ -23,7 +23,7 @@ export class WorkspaceStatsComponent extends React.Component {
   }
 
   public getTotalAsigned(): number {
-    if (this.props.list) {
+    if (this.props.list && this.props.list.length > 0) {
       return this.props.list.map((proj:Project) => proj.assignated)
       .reduce((prev: number, next: number) =>{
         return prev + next;
@@ -34,7 +34,7 @@ export class WorkspaceStatsComponent extends React.Component {
   }
 
   public getTotalFree(): number {
-    if (this.props.list) {
+    if (this.props.list && this.props.list.length > 0) {
       return this.props.list.map((proj:Project) => proj.free_pool)
       .reduce((prev: number, next: number) =>{
         return prev + next;
@@ -49,7 +49,7 @@ export class WorkspaceStatsComponent extends React.Component {
   }
 
   public getProgress(): number {
-    if (this.props.list) {
+    if (this.props.list && this.props.list.length > 0) {
       let done = this.props.list.map((proj:Project) => proj.assignated_done)
       .reduce((prev: number, next: number) =>{
         return prev + next;
@@ -65,7 +65,7 @@ export class WorkspaceStatsComponent extends React.Component {
   }
 
   public getProgressCombined(): number {
-    if (this.props.list) {
+    if (this.props.list && this.props.list.length > 0) {
       let done = this.props.list.map((proj:Project) => proj.assignated_done + proj.free_pool_done)
       .reduce((prev: number, next: number) =>{
         return prev + next;
