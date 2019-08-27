@@ -58,3 +58,6 @@ gem 'jwt'
 
 # Grape autentication
 gem 'grape-jwt-authentication'
+
+# AWS SDK
+gem 'aws-sdk', '~> 3'

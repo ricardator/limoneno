@@ -4,6 +4,9 @@ class User < ApplicationRecord
     validates :name, presence: true
     has_secure_password
 
+    has_many :project_users
+    has_many :projects, through: :project_users
+
     def to_json(options={})
      options[:except] ||= [:password_digest, :created_at, :updated_at]
      super(options)

@@ -7,10 +7,10 @@ import { connect } from 'react-redux';
 import { Form, Input, Icon, Button, Alert } from 'antd';
 import 'antd/dist/antd.css';
 import logo from '../../assets/svg/logo.svg';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import FooterComponent from '../../shared/footer/footer';
 
-class LoginContainer extends React.Component{
+class LoginContainer extends React.Component {
   // Define the props in component
   public props: any;
 
