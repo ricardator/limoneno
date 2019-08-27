@@ -1,10 +1,10 @@
 ![limoneno](https://github.com/LemontechSA/limoneno/blob/master/frontend/src/assets/png/limoneno.png?raw=true)
 
-LET IA training tool.
+***LET IA training tool***
 
 ## Comienzo
 
-Limoneno es una herramienta para asistir el proceso de entrenamiento de modelos de machine learning, especificamente relacionado al uso de CNN (Convolutional neural networks), diseñada para efectuar y gestionar un trabajo colaborativo a la hora de abordar proyectos de entrenamiento y clasificacion de modelos. 
+Limoneno es una herramienta para asistir el proceso de entrenamiento de modelos de machine learning, especificamente relacionado al uso de CNN ***(Convolutional neural networks)***, diseñada para efectuar y gestionar un trabajo colaborativo a la hora de abordar proyectos de entrenamiento y clasificacion de modelos. 
 
 Limoneno permite la gestión de usuarios y proyectos de forma que puede utilizarse para asignar cargas de trabajo y medir el avance de un pool de personas dedicadas al trabajo de clasificación.
 
