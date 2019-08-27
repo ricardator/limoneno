@@ -150,18 +150,22 @@ export class ProjectTagComponent extends React.Component<any> {
   }
 
   public tag(entity: Entity): void {
-    let workout = this.state.workout;
-    workout.tags.push(new DatasetItemTag({
-      start: this.state.tmp_start,
-      end: this.state.tmp_end,
-      type: entity.name
-    }));
+    if (this.state.tmp_start && this.state.tmp_end) {
+      let workout = this.state.workout;
+      workout.tags.push(new DatasetItemTag({
+        start: this.state.tmp_start,
+        end: this.state.tmp_end,
+        type: entity.name
+      }));
 
-    this.setState({
-      tmp_start: null,
-      tmp_end: null,
-      workout: workout
-    });
+      this.setState({
+        tmp_start: null,
+        tmp_end: null,
+        workout: workout
+      });
+    } else {
+      message.warning("Debe seleccionar una fragmento de texto");
+    }
   }
 
   public getEntities(): any {

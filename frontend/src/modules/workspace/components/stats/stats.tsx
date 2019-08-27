@@ -57,7 +57,7 @@ export class WorkspaceStatsComponent extends React.Component {
       if (this.getTotalAsigned() !== 0) {
         return Math.floor(done/this.getTotalAsigned());
       } else {
-        return 0;
+        return Math.floor(done/1);
       }
     } else {
       return 0;
@@ -73,7 +73,7 @@ export class WorkspaceStatsComponent extends React.Component {
       if (this.getTotalAsigned() !== 0) {
         return Math.floor(done/this.getTotalAsigned());
       } else {
-        return 0;
+        return Math.floor(done/1*100);
       }
     } else {
       return 0;
