@@ -63,9 +63,10 @@ ActiveRecord::Schema.define(version: 2019_08_26_031013) do
   create_table "projects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "description"
-    t.integer "type"
+    t.integer "clasification_type"
     t.text "entities", size: :long, collation: "utf8mb4_bin"
     t.text "clasifications", size: :long, collation: "utf8mb4_bin"
+    t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

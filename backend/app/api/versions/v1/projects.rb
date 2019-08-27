@@ -44,6 +44,8 @@ module Versions
       patch do
         id = params[:id]
         name = params[:name]
+        datasets = Dataset.find(params[:datasets])
+        users = User.find(params[:users])
 
         Project.update(id, {
           name: params[:name],
