@@ -36,31 +36,35 @@ export class ProjectTagComponent extends React.Component<any> {
     document.onselectionchange = () => {
       let selection = window.getSelection();
       if (this.state.workout) {
-        let text = this.state.workout.datasetItem.text;
-        let parent = selection.focusNode.parentNode.parentNode;
-        let parentMax = selection.focusNode.parentNode.parentNode.parentNode;
-        if (parent.className === 'dataset__text' || parentMax.className === 'dataset__text') {
-          if(text.indexOf(selection.toString()) === text.lastIndexOf(selection.toString())) {
-            this.setState({
-              tmp_start: text.indexOf(selection.toString()),
-              tmp_end: text.indexOf(selection.toString()) + selection.toString().length
-            });
-          } else {
-            let value = selection.baseNode.nodeValue;
-            let offset = this.state.workout.datasetItem.text.indexOf(value);
-            
-            if (selection.anchorOffset < selection.focusOffset) {
+        try {
+          let text = this.state.workout.datasetItem.text;
+          let parent = selection.focusNode.parentNode.parentNode;
+          let parentMax = selection.focusNode.parentNode.parentNode.parentNode;
+          if (parent.className === 'dataset__text' || parentMax.className === 'dataset__text') {
+            if(text.indexOf(selection.toString()) === text.lastIndexOf(selection.toString())) {
               this.setState({
-                tmp_start: selection.anchorOffset + offset,
-                tmp_end: selection.focusOffset + offset
+                tmp_start: text.indexOf(selection.toString()),
+                tmp_end: text.indexOf(selection.toString()) + selection.toString().length
               });
             } else {
-              this.setState({
-                tmp_start: selection.focusOffset + offset,
-                tmp_end: selection.anchorOffset + offset
-              });
+              let value = selection.baseNode.nodeValue;
+              let offset = this.state.workout.datasetItem.text.indexOf(value);
+              
+              if (selection.anchorOffset < selection.focusOffset) {
+                this.setState({
+                  tmp_start: selection.anchorOffset + offset,
+                  tmp_end: selection.focusOffset + offset
+                });
+              } else {
+                this.setState({
+                  tmp_start: selection.focusOffset + offset,
+                  tmp_end: selection.anchorOffset + offset
+                });
+              }
             }
           }
+        } catch(e) {
+          
         }
       } 
     };
