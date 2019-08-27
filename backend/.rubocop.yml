@@ -1,0 +1,36 @@
+
+require: rubocop-rspec
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+AllCops:
+  TargetRubyVersion: 2.6.3
+  Exclude:
+    - bin/*
+    - Rakefile
+    - test/*.rb
+    - config/**/*.rb
+    - db/**/*.rb
+    - spec/cassettes/*
+LineLength:
+  Max: 100
+
+# The ABC size is based on assignments, branches (method calls), and conditions
+Metrics/AbcSize:
+  Max: 20
+
+# Maximum number of lines that a class can contain; 250 for us
+ClassLength:
+  CountComments: false
+  Max: 250
+
+# How many escaped slashes there are in a regex and on
+# the value of the configuration parameter MaxSlashes
+RegexpLiteral:
+  Enabled: false
+
+BlockLength:
+  Enabled: false
+
+Layout/EndOfLine:
+  EnforcedStyle: lf

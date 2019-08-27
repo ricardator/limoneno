@@ -12,7 +12,7 @@ default: &default
   username: root
   password: <%= ENV['DATABASE_PASSWORD'] %>
   database: <%= ENV['DATABASE_NAME'] %>
-  port: 3306
+  port: <%= ENV['DATABASE_PORT'] %>
 
 development:
   <<: *default
