@@ -61,3 +61,9 @@ gem 'grape-jwt-authentication'
 
 # AWS SDK
 gem 'aws-sdk', '~> 3'
+
+#Sidekiq
+gem 'sidekiq'
+
+#Foreman
+gem 'foreman'

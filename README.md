@@ -73,7 +73,7 @@ Posterior a esto debe iniciar la app en rails para desplegar el entorno de backe
 ```bash
 # Run rails app
 bundle install
-rails s
+foreman start
 ```
 
 ### Frontend

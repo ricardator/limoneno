@@ -24,6 +24,13 @@ services:
     networks:
       webapp:
         ipv4_address: 26.0.0.3
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    networks: 
+      webapp:
+        ipv4_address: 26.0.0.4
 volumes:
   limoneno-database-develop:
 networks:
