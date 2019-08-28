@@ -4,7 +4,7 @@
 
 ## Comienzo
 
-Limoneno es una herramienta para asistir el proceso de entrenamiento de modelos de machine learning, especificamente relacionado al uso de CNN ***(Convolutional neural networks)***, diseñada para efectuar y gestionar un trabajo colaborativo a la hora de abordar proyectos de entrenamiento y clasificacion de modelos. 
+Limoneno es una herramienta para asistir el proceso de entrenamiento de modelos de machine learning, especificamente relacionado al uso de CNN ***(Convolutional neural networks)***, diseñada para efectuar y gestionar un trabajo colaborativo a la hora de abordar proyectos de entrenamiento y clasificacion de modelos.
 
 Limoneno permite la gestión de usuarios y proyectos de forma que puede utilizarse para asignar cargas de trabajo y medir el avance de un pool de personas dedicadas al trabajo de clasificación.
 
@@ -18,7 +18,7 @@ Para comenzar con el desarrollo al interior de la app debe efectuar las siguient
 
 ```bash
 # In Debian based linux
-sudo apt-get install -y docker 
+sudo apt-get install -y docker
 # In RHEL based linux
 sudo yum install -y docker
 ```
@@ -56,24 +56,31 @@ Limoneno hace uso de contenedores Docker para efectuar labores de desarrollo, po
 docker-compose up -d
 ```
 
-La app esta construido como una arquitectura Cliente - Servidor, separando de esta forma la logica de backend y frontend. 
+La app está construida con una arquitectura Cliente - Servidor, separando de esta forma la lógica de backend y frontend.
 
 ### Backend
 
-Debe inicialmente correr las migraciones existentes para migrar los modelos de datos. Para esto es necesario acceder al directorio de backend y ejecutar la sentencia.
+En primer lugar, debe acceder al directorio de backend y ejecutar la sentencia, lo que instala las dependencias del proyecto.
+
+```bash
+cd backend
+bundle install
+```
+
+Luego, es necesario crear la base de datos y correr las migraciones existentes para migrar los modelos de datos. Sumado a esto, hay que generar datos de prueba para que la aplicación pueda funcionar correctamente.
 
 ```bash
 # Run migrations
-cd backend
+rake db:create
 rake db:migrate
+rake db:seed
 ```
 
 Posterior a esto debe iniciar la app en rails para desplegar el entorno de backend. Para esto en el mismo directorio ejecute la siguiente instrucción.
 
 ```bash
 # Run rails app
-bundle install
-foreman start
+rails start
 ```
 
 ### Frontend
@@ -86,7 +93,12 @@ cd frontend
 yarn start
 ```
 
-Posterior a esto la app debe estart desplegada y lista para efectuar labores de desarrollo.
+Posterior a esto la app debe estar desplegada y lista para efectuar labores de desarrollo. Para ingresar debes utilizar los siguiente datos:
+
+```
+email: admin@lemontech.com
+password: 12345678
+```
 
 **Recuerda agregar información extra al README, si efectuaste una modificación al entorno**
 
