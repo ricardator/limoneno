@@ -23,6 +23,8 @@ sudo apt-get install -y docker
 sudo yum install -y docker
 ```
 
+En Mac se puede utilizar Homebrew para la instalación, o descargarlo desde el [sitio oficial](https://docs.docker.com/v17.12/docker-for-mac/install/).
+
 
 - Install Ruby and Ruby on Rails
 ```bash
@@ -34,17 +36,23 @@ sudo yum install ruby
 gem install rails
 ```
 
+O puede usar su administrador de versiones de ruby ​​preferido.
+
 - Install Nodejs and NPM
 ```bash
 # In Debian based linux
 sudo apt-get install nodejs npm
 # In RHEL based linux
 sudo yum install nodejs
+# In mac
+brew install node
 ```
 - Install yarn
 ```bash
-# Install yarn
+# In linux
 sudo npm install yarn -g
+# In mac
+brew install yarn
 ```
 
 ## Entorno de desarrollo
@@ -67,7 +75,7 @@ cd backend
 bundle install
 ```
 
-Luego, es necesario crear la base de datos y correr las migraciones existentes para migrar los modelos de datos. Sumado a esto, hay que generar datos de prueba para que la aplicación pueda funcionar correctamente.
+Luego es necesario crear la base de datos y correr las migraciones existentes para migrar los modelos de datos. Adicionalmente, hay que generar datos de prueba para que la aplicación pueda funcionar correctamente.
 
 ```bash
 # Run migrations
