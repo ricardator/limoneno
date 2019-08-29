@@ -1,15 +1,25 @@
 module DatasetService 
   class Files
     def self.upload_pdf(file)
-      AwsService::S3.list_files
-      [{
-        name: 'file',
-        text: 'perrito lorem ipsum',
-        metadata: '',
-        url: 'ashjbasdjabdjas',
-        status: 1,
-        stored: false
+      stored = false
+      if file[:data]
+        data = Base64.decode64(file[:data])
+        stored = self.save_s3 file
+      elsif file[:url]
+        data = self.download_file(file[:url])
+      end
+
+      # 0: Archivo no cargado, 1: archivo cargado, 2: Archivo en proceso de carga
+      dataset_item = [{
+        name: file[:name],
+        text: data,
+        metadata: nil,
+        url: nil,
+        status: 2, 
+        stored: stored
       }]
+
+      PdfConvertion.perform_async(data, file, dataset_item)
     end
 
     def self.upload_txt(file)
