@@ -64,6 +64,8 @@ gem 'grape-jwt-authentication'
 # AWS SDK
 gem 'aws-sdk', '~> 3'
 
+# Sidekiq for job managment
 gem 'sidekiq'
 
+# Foreman for run with procfiles
 gem 'foreman'
