@@ -112,7 +112,7 @@ export class DraftProjectComponent extends React.Component<any> {
     this.setState({
       loading: true
     });
-    
+
     if (this.validate()) {
       ProjectService.getInstance().create(this.state.project).subscribe(data => {
         this.props.history.push("/projects")
@@ -173,7 +173,7 @@ export class DraftProjectComponent extends React.Component<any> {
   public showSteps(): any {
     return (
       <Steps size="small" current={this.state.current} className="step">
-        <Steps.Step onClick={this.next.bind(this, 0, true)} className="action" 
+        <Steps.Step onClick={this.next.bind(this, 0, true)} className="action"
           title="Información" description="Datos del proyecto" />
         <Steps.Step onClick={this.next.bind(this, 1, true)} className="action"
           title="Datasets" description="Datasets involucrados." />
@@ -259,7 +259,7 @@ export class DraftProjectComponent extends React.Component<any> {
             <div className="datasets_item" key={dataset.id}>
               <div className="datasets_name">{dataset.name}</div>
               <div className="datasets_elements">{dataset.items_count} Elementos</div>
-              <div className="datasets_delete" 
+              <div className="datasets_delete"
                 onClick={this.removeDataset.bind(this, dataset)}
               >
                 <Icon type="delete" /> Eliminar
@@ -287,7 +287,7 @@ export class DraftProjectComponent extends React.Component<any> {
               }
             >
               {this.props.datasets.map((dataset: Dataset) => {
-                return <Select.Option key={dataset.id} 
+                return <Select.Option key={dataset.id}
                   value={dataset.id}>{dataset.name + ' - ' + dataset.items_count + ' Elementos'}</Select.Option>
               })}
             </Select>
@@ -357,7 +357,7 @@ export class DraftProjectComponent extends React.Component<any> {
         <Form.Item className="inputs">
         <div className="label">Clasificación de documentos:</div>
           <div className="checkbox">
-            <Checkbox 
+            <Checkbox
               onChange={this.activateEntities.bind(this, 1)}
               checked={this.state.clasification}
             />
@@ -366,7 +366,7 @@ export class DraftProjectComponent extends React.Component<any> {
             </span>
           </div>
           <div className="label">Ingrese las clasificaciones:</div>
-          <Select mode="tags" placeholder="Clasificaciones" 
+          <Select mode="tags" placeholder="Clasificaciones"
             onChange={this.addClasification.bind(this)}
             disabled={!this.state.clasification}
             defaultValue={this.state.project.clasifications.map((cla: any) => {
@@ -377,7 +377,7 @@ export class DraftProjectComponent extends React.Component<any> {
         <Form.Item className="inputs">
           <div className="label">Busqueda de entidades:</div>
           <div className="checkbox">
-            <Checkbox 
+            <Checkbox
               onChange={this.activateEntities.bind(this, 2)}
               checked={this.state.entities}
             />
@@ -386,7 +386,7 @@ export class DraftProjectComponent extends React.Component<any> {
             </span>
           </div>
           <div className="label">Ingrese las entidades:</div>
-          <Select mode="tags" placeholder="Entidades" 
+          <Select mode="tags" placeholder="Entidades"
             onChange={this.addEntities.bind(this)}
             disabled={!this.state.entities}
             defaultValue={this.state.project.entities.map((ent: any) => {
@@ -434,7 +434,7 @@ export class DraftProjectComponent extends React.Component<any> {
             <div className="users_item" key={user.id}>
               <div className="users_name">{user.name}</div>
               <div className="users_elements">{user.email}</div>
-              <div className="users_delete" 
+              <div className="users_delete"
                 onClick={this.removeUser.bind(this, user)}
               >
                 <Icon type="delete" /> Eliminar
@@ -470,7 +470,7 @@ export class DraftProjectComponent extends React.Component<any> {
               }
             >
               {this.props.users.map((user: User) => {
-                return <Select.Option key={user.id} 
+                return <Select.Option key={user.id}
                   value={user.id}>{user.name + ' - ' + user.email}</Select.Option>
               })}
             </Select>
@@ -488,7 +488,7 @@ export class DraftProjectComponent extends React.Component<any> {
     )
   }
 
-  
+
 
   public currentStep(): any {
     if (this.props.match.params.id && !this.props.project) {
@@ -509,7 +509,7 @@ export class DraftProjectComponent extends React.Component<any> {
   public static getDerivedStateFromProps(props: any, state: any) {
     if (props.project) {
       state.project = props.project;
-    } 
+    }
     return state;
   }
 
@@ -535,7 +535,7 @@ function mapStateToProps(state: any) {
       project: state.project.project
     }
   }
-  
+
   function matchDispatchToProps(dispatch: any) {
     return bindActionCreators({
       setProject,
@@ -546,5 +546,5 @@ function mapStateToProps(state: any) {
       getProject
     }, dispatch);
   }
-  
+
 export default connect(mapStateToProps, matchDispatchToProps)(withRouter(DraftProjectComponent));

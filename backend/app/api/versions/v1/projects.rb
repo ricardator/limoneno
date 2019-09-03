@@ -60,11 +60,11 @@ module Versions
 
         status 204
       end
-      
+
       # DELETE DATASET METHOD
       delete ':id' do
         id = params[:id]
-        
+
         ProjectUser.where({
           project_id: id
         }).delete_all
@@ -116,15 +116,15 @@ module Versions
         projects
       end
 
-      # GET UNIQUE DATASET
+      # GET UNIQUE PROJECT
       get ':id' do
         id = params[:id]
-        
+
         project = Project.where({
           id: id
         }).includes(:users)
         .includes(:datasets).first
-        
+
         tmp = project.attributes
         tmp[:datasets] = project.datasets
         tmp[:users] = project.users
@@ -162,7 +162,7 @@ module Versions
 
     namespace :users do
       route_param :user_id do
-        namespace :projects do 
+        namespace :projects do
           get do
 
             user = params[:user_id]
@@ -220,8 +220,8 @@ module Versions
                   project_id: params[:project_id],
                   status: [0, -1]
                 }).includes(:dataset, :dataset_item).first
-                # Get From free pool if 
-                if (assignated) 
+                # Get From free pool if
+                if (assignated)
                   status 200;
                   return assignated.as_json(include: [:dataset, :dataset_item])
                 else
@@ -245,7 +245,7 @@ module Versions
                       dataset_id: free_pool.dataset,
                       dataset_item_id: free_pool.id
                     })
-                    
+
                     assignated = ProjectDatasetItem.where(
                       id: created.id
                     ).includes(:dataset, :dataset_item).first
@@ -261,13 +261,13 @@ module Versions
               patch ':id' do
                 id = params[:id]
 
-                
+
                 clasification = ProjectDatasetItem.update(id, {
                   clasification: params[:clasification],
                   tags: params[:tags].to_json,
                   status: (params[:status] ==-1) ? 2 : 1
                 })
-                
+
                 clasification.status = 2;
 
                 status 200
