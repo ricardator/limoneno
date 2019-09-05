@@ -3,9 +3,9 @@
 
 require 'google/protobuf'
 
-require 'midas/midas_message_pb'
+require 'proto/midas/midas_message_pb'
 Google::Protobuf::DescriptorPool.generated_pool.build do
-  add_file("midas/midas.proto", :syntax => :proto3) do
+  add_file('midas/midas.proto', syntax: :proto3) do
   end
 end
 

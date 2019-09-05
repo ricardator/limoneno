@@ -2,12 +2,11 @@
 # Source: midas/midas.proto for package 'midas'
 
 require 'grpc'
-require 'midas/midas_pb'
+require 'proto/midas/midas_pb'
 
 module Midas
   module MidasService
     class Service
-
       include GRPC::GenericService
 
       self.marshal_class_method = :encode
