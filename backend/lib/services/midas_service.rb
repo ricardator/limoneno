@@ -14,19 +14,37 @@ module MidasService
 
     # For PDF files use 'file_type = Midas::InputFormat::PDF'
     def self.get_file_text(file, file_type = Midas::InputFormat::INPUT_FORMAT_AUTO)
+      raise(Exception, 'File not provided.') unless file.present?
+
       request = prepare_request(file, file_type)
-      call_get_text(request)
+      response_object = call_get_text(request)
+      parse_response(response_object)
     end
 
     # For PDF files use 'file_type = Midas::InputFormat::PDF'
     def self.get_remote_file_text(url, file_type = Midas::InputFormat::INPUT_FORMAT_AUTO)
+      raise(Exception, 'URL not provided.') unless url.present?
+
       request = prepare_remote_request(url, file_type)
-      call_get_text(request)
+      response_object = call_get_text(request)
+      parse_response(response_object)
+    end
+
+    private_class_method def self.parse_response(midas_reponse)
+      document_text = +''
+      midas_reponse.each do |page|
+        page_text = page.try(:text)
+        next unless page_text.present?
+
+        document_text << "#{page_text}\n "
+      end
+
+      document_text
     end
 
     private_class_method def self.call_get_text(request)
       stub = Midas::MidasService::Stub.new(MIDAS_HOST, :this_channel_is_insecure)
-      response_object = stub.get_text(request)
+      stub.get_text(request)
     end
 
     private_class_method def self.prepare_remote_request(url, file_type)
