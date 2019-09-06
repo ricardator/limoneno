@@ -48,12 +48,12 @@ module MidasService
     end
 
     private_class_method def self.prepare_remote_request(url, file_type)
-      set_default_buffer
+      change_default_buffer do
+        downloaded_document = URI.open(url)
+        file = File.read(downloaded_document, encoding: FILE_ENCODING)
 
-      downloaded_document = URI.open(url)
-      file = File.read(downloaded_document, encoding: FILE_ENCODING)
-
-      prepare_request(file, file_type)
+        return prepare_request(file, file_type)
+      end
     end
 
     private_class_method def self.prepare_request(file, input_format)
@@ -66,12 +66,24 @@ module MidasService
 
     # Sets default read buffer to 0 to force OpenURI to store it inside a TempFile.
     # If a file is small enough OpenURI returns StringIO instead of TempFile.
-    # Maybe this should be inside an initializer
-    private_class_method def self.set_default_buffer
+    # Resets defaults after use
+    private_class_method def self.change_default_buffer
+      default_buffer = remove_buffer_const
+      OpenURI::Buffer.const_set('StringMax', 0)
+
+      yield
+
+      remove_buffer_const
+      OpenURI::Buffer.const_set('StringMax', default_buffer) if default_buffer.present?
+    end
+
+    private_class_method def self.remove_buffer_const
+      default_buffer = nil
       if OpenURI::Buffer.const_defined?('StringMax')
+        default_buffer = OpenURI::Buffer::StringMax
         OpenURI::Buffer.send(:remove_const, 'StringMax')
       end
-      OpenURI::Buffer.const_set('StringMax', 0)
+      default_buffer
     end
   end
 end
