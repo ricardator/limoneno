@@ -9,8 +9,6 @@ module MidasService
   class MidasClient
     MIDAS_HOST = 'midas.caseflow.lemontech.com:80'
     FILE_ENCODING = 'ASCII-8BIT'
-    # http://www.africau.edu/images/default/sample.pdf
-    # https://civil.pjud.cl/CIVILPORWEB/DownloadFile.do?TIP_Documento=2&TIP_Archivo=3&COD_Opcion=1&COD_Tribunal=198&CRR_IdEscrito=73220229&CRR_IdDocEscrito=55086940
 
     # For PDF files use 'file_type = Midas::InputFormat::PDF'
     def self.get_file_text(file, file_type = Midas::InputFormat::INPUT_FORMAT_AUTO)
