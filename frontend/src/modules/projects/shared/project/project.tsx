@@ -73,25 +73,31 @@ export class ProjectComponent extends React.Component<any> {
   public loadElements(): void {
     this.setState({
       asingModal: true
-    });
+    })
   }
 
   public showModal(): any {
     if (this.state.asingModal) {
       return (
         <DatasetItemMapperComponent
-          close={this.asings.bind(this)}
+          action={this.assignPool.bind(this)}
+          close={this.closeModal.bind(this)}
           project={this.props.project}
         >
         </DatasetItemMapperComponent>
-      );
+      )
     }
   }
 
-  public asings(): any {
+  public closeModal(): any {
     this.setState({
       asingModal: false
-    });
+    })
+  }
+
+  public assignPool(usersPool: []): any {
+    console.log(usersPool)
+    this.closeModal()
   }
 
   public render() {

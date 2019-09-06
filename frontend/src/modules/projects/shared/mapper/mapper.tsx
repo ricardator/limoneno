@@ -14,7 +14,7 @@ export class DatasetItemMapperComponent extends React.Component<any> {
   public state: any = {
     currentUserPool: {},
     currentFreePool: 0
-  };
+  }
 
   public componentDidMount() {
     this.setState({
@@ -47,11 +47,19 @@ export class DatasetItemMapperComponent extends React.Component<any> {
           )
         })}
       </div>
-    );
+    )
   }
 
   public close(): void {
     this.props.close(this);
+  }
+
+  public action(): void {
+    if (this.state.currentFreePool == this.props.project.free_pool){
+      this.close()
+      return
+    }
+    this.props.action(this.state.currentUserPool);
   }
 
   public updateFreePool(userId: any, value: any): void {
@@ -60,12 +68,12 @@ export class DatasetItemMapperComponent extends React.Component<any> {
     const sum = values.reduce((sum, x) => sum + x)
     if (this.props.project.free_pool - sum < 0) {
       message.warning("La cantidad asignada supera a la disponible");
-      return;
+      return
     }
     this.setState({
       currentUserPool: newPool,
       currentFreePool: this.props.project.free_pool - sum
-    });
+    })
   }
 
   public render() {
@@ -75,7 +83,7 @@ export class DatasetItemMapperComponent extends React.Component<any> {
           visible={true}
           onCancel={this.close.bind(this, {})}
           footer={[
-            <Button key="mapper" type="primary" onClick={this.close.bind(this, {})}>
+            <Button key="mapper" type="primary" onClick={this.action.bind(this, {})}>
               Asignar
             </Button>
           ]}>
