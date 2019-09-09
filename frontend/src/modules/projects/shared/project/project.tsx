@@ -9,6 +9,7 @@ import { User } from '../../../../models/user';
 import { Dataset } from '../../../../models/dataset';
 import { destroyProject } from '../../../../actions/doprojects';
 import DatasetItemMapperComponent from '../mapper/mapper';
+import ProjectService from '../../../../services/projects/projects.service';
 
 export class ProjectComponent extends React.Component<any> {
 
@@ -95,7 +96,10 @@ export class ProjectComponent extends React.Component<any> {
     })
   }
 
-  public assignPool(usersPool: []): any {
+  public assignPool(usersPool: {}): any {
+    ProjectService.getInstance().assignPool(this.props.project.id, usersPool).subscribe(data => {
+      console.log('OK')
+    })
     this.closeModal()
   }
 

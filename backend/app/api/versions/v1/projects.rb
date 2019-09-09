@@ -123,7 +123,7 @@ module Versions
         project = Project.where(
           id: id
         ).includes(:users)
-                         .includes(:datasets).first
+        .includes(:datasets).first
 
         tmp = project.attributes
         tmp[:datasets] = project.datasets
