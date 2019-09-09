@@ -100,6 +100,7 @@ export class ProjectComponent extends React.Component<any> {
     this.closeModal()
   }
 
+
   public render() {
     return (
       <div className="project">

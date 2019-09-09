@@ -157,7 +157,7 @@ module Versions
       route_param :project_id do
         params do
           requires :project_id, type: Integer, desc: 'Project id'
-          requires :users_pool, type: Array[Hash], desc: 'pool assigned to users'
+          requires :users_pool, type: Hash, desc: 'pool assigned to users'
         end
         post :pool do
           project_id = params[:project_id]
@@ -171,11 +171,11 @@ module Versions
           .where('project_dataset_items.id IS NULL')
           .select('dataset_items.id, datasets.id AS dataset').to_a
 
-          users_pool.map do |assignated|
-            user_pool = free_pool.shift(assignated['pool'])
+          users_pool.each do |user_id, pool|
+            user_pool = free_pool.shift(pool)
             user_pool.each do |item|
               ProjectDatasetItem.create(
-                user_id: assignated['user_id'],
+                user_id: user_id,
                 project_id: project_id,
                 status: 0,
                 dataset_id: item.dataset,
