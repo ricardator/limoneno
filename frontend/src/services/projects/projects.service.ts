@@ -84,11 +84,11 @@ export default class ProjectService {
         let target = this.projects.find(item => {
           return item.id === project.id;
         });
-        
+
         if (target) {
           this.projects[this.projects.indexOf(target)] = project;
         }
-        
+
         observe.next(this.projects.map(project => {
           return new Project(project);
         }));

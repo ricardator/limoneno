@@ -96,7 +96,6 @@ export class ProjectComponent extends React.Component<any> {
   }
 
   public assignPool(usersPool: []): any {
-    console.log(usersPool)
     this.closeModal()
   }
 

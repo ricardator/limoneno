@@ -159,7 +159,7 @@ module Versions
           requires :project_id, type: Integer, desc: 'Project id'
           requires :users_pool, type: Hash, desc: 'pool assigned to users'
         end
-        post :pool do
+        post :assign_pool do
           project_id = params[:project_id]
           users_pool = params[:users_pool]
 
