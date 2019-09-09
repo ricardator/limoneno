@@ -119,7 +119,11 @@ export default class ProjectService {
     return new Observable<Project>(observe => {
       const data = {"users_pool": usersPool}
       RestService.post(`projects/${id}/assign_pool`, data).subscribe(response => {
-
+        observe.next(new Project(response.data));
+        observe.complete();
+      }, error => {
+        observe.error(error);
+        observe.complete();
       });
     });
   }

@@ -7,7 +7,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { Icon, Progress, Tooltip, Tag, Button, Modal } from 'antd';
 import { User } from '../../../../models/user';
 import { Dataset } from '../../../../models/dataset';
-import { destroyProject } from '../../../../actions/doprojects';
+import { destroyProject, assignPool } from '../../../../actions/doprojects';
 import DatasetItemMapperComponent from '../mapper/mapper';
 import ProjectService from '../../../../services/projects/projects.service';
 
@@ -97,9 +97,7 @@ export class ProjectComponent extends React.Component<any> {
   }
 
   public assignPool(usersPool: {}): any {
-    ProjectService.getInstance().assignPool(this.props.project.id, usersPool).subscribe(data => {
-      console.log('OK')
-    })
+    this.props.assignPool(this.props.project.id, usersPool)
     this.closeModal()
   }
 
@@ -148,7 +146,8 @@ function mapStateToProps(state: any) {
 
 function matchDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    destroyProject
+    destroyProject,
+    assignPool
   }, dispatch);
 }
 
