@@ -19,7 +19,7 @@ module Versions
           dataset_id = params[:dataset_id]
 
           return status 400 unless params[:data] || params[:url]
-          
+
           case mime
           when "application/pdf"
             file = DatasetService::Files.upload_pdf params
@@ -68,15 +68,15 @@ module Versions
               metadata: params[:metadata],
               url: params[:url]
           });
-  
+
           status 204
         end
-        
+
         # DELETE DATASET METHOD
         delete ':id' do
           id = params[:id]
           dataset_id = params[:dataset_id]
-          
+
           item = DatasetItem.where(id).first
 
           if item.stored
@@ -92,7 +92,7 @@ module Versions
         # GET DATASETS ITEM OF DATASET
         get ':id' do
           id = params[:id]
-          
+
           datasets = DatasetItem.where({
             id: id
           }).first;
