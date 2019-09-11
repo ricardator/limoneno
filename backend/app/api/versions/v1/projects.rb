@@ -225,7 +225,6 @@ module Versions
                   status 200
                   return assignated.as_json(include: %i[dataset dataset_item])
                 else
-                  puts '==============='
                   free_pool = Project.where(
                     id: params[:project_id]
                   ).joins(:datasets)
