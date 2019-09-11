@@ -80,7 +80,7 @@ export const assignPool = (id: number, usersPool: {}) => {
     ProjectService.getInstance().assignPool(id, usersPool).subscribe(data => {
       dispatch({
         payload: data,
-        type: UPDATE_PROJECT_ITEMS
+        type: UPDATE_PROJECTS
       });
     });
   }

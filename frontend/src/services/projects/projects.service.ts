@@ -115,11 +115,22 @@ export default class ProjectService {
     });
   }
 
-  public assignPool(id: number, usersPool: {}): Observable<Project> {
-    return new Observable<Project>(observe => {
+  public assignPool(id: number, usersPool: {}): Observable<Project[]> {
+    return new Observable<Project[]>(observe => {
       const data = {"users_pool": usersPool}
       RestService.post(`projects/${id}/assign_pool`, data).subscribe(response => {
-        observe.next(new Project(response.data));
+        let target = this.projects.find(item => {
+          return item.id === id;
+        });
+
+        if (target) {
+          this.projects[this.projects.indexOf(target)] = response.data;
+        }
+
+        observe.next(this.projects.map(project => {
+          return new Project(project);
+        }));
+
         observe.complete();
       }, error => {
         observe.error(error);

@@ -7,22 +7,19 @@ import { withRouter } from 'react-router-dom';
 import { Modal, Button, InputNumber, message } from 'antd';
 import { User } from '../../../../models/user';
 
-export class DatasetItemMapperComponent extends React.Component<any> {
+export class DatasetItemMapperComponent extends React.Component<any, any> {
+
   // Define the props in component
-  public props: any;
+  constructor(props: any){
+    super(props)
+    this.getAvailablePool = this.getAvailablePool.bind(this)
+  }
 
   public state: any = {
-    currentUserPool: {},
-    currentFreePool: 0
+    currentUserPool: {}
   }
 
-  public componentDidMount() {
-    this.setState({
-      currentFreePool: this.props.project.free_pool
-    })
-  }
-
-  public showProjectUsers(): any {
+  showProjectUsers(): any {
     return (
       <div className="users_list">
         <div className="users_item dark">
@@ -40,6 +37,7 @@ export class DatasetItemMapperComponent extends React.Component<any> {
                   min={0}
                   size="small"
                   defaultValue={0}
+                  value={this.state.currentUserPool[user.id] || 0}
                   onChange={this.updateFreePool.bind(this, user.id)}
                 ></InputNumber>
               </div>
@@ -50,33 +48,39 @@ export class DatasetItemMapperComponent extends React.Component<any> {
     )
   }
 
-  public close(): void {
+  close(): void {
     this.props.close(this);
   }
 
-  public action(): void {
-    if (this.state.currentFreePool == this.props.project.free_pool){
+  action(): void {
+    if (this.getAvailablePool() === this.props.project.free_pool){
       this.close()
       return
     }
     this.props.action(this.state.currentUserPool);
   }
 
-  public updateFreePool(userId: any, value: any): void {
-    const newPool = { ...this.state.currentUserPool, [userId]: value }
-    const values: number[] = Object.values(newPool)
-    const sum = values.reduce((sum, x) => sum + x)
-    if (this.props.project.free_pool - sum < 0) {
+  updateFreePool(userId: any, value: any): void {
+    const { currentUserPool } = this.state
+    const newPool = { ...currentUserPool, [userId]: value }
+    if (this.getAvailablePool() === 0 && newPool[userId] > currentUserPool[userId]) {
       message.warning("La cantidad asignada supera a la disponible");
       return
     }
     this.setState({
-      currentUserPool: newPool,
-      currentFreePool: this.props.project.free_pool - sum
+      currentUserPool: newPool
     })
   }
 
-  public render() {
+  getAvailablePool = (): number => {
+    const values: number[] = Object.values(this.state.currentUserPool)
+    if (values.length === 0) return this.props.project.free_pool
+    const sum = values.reduce((sum, x) => sum + x)
+    return this.props.project.free_pool - sum
+  }
+
+  render() {
+    const availablePool = this.getAvailablePool()
     return (
       <Modal
           title="Asignar Carga"
@@ -90,7 +94,7 @@ export class DatasetItemMapperComponent extends React.Component<any> {
         <div className="mapper">
           <div className="mapper_content">
             <div className="free_pool">
-              Cantidad de Libre Disposición: {this.state.currentFreePool}
+              Cantidad de Libre Disposición: {availablePool}
             </div>
             {this.showProjectUsers()}
           </div>
@@ -98,6 +102,12 @@ export class DatasetItemMapperComponent extends React.Component<any> {
       </Modal>
     )
   }
+}
+
+interface IProps {
+  project: any,
+  action: any,
+  close: any
 }
 
 // Configure React-redux store functions
