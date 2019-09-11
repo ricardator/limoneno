@@ -12,6 +12,7 @@ import { DatasetItemTag } from '../../../../models/dataset-item-tag';
 import { Taggy } from '../../shared/taggy/taggy';
 import ClasificationService from '../../../../services/clasification/clasification.service';
 import { ProjectDatasetItem } from '../../../../models/project-dataset-item';
+import { Subclasification } from '../../../../models/subclasification';
 
 declare var window: any;
 declare var document: any;
@@ -64,7 +65,7 @@ export class ProjectTagComponent extends React.Component<any> {
             }
           }
         } catch(e) {
-          
+          message.error(e);
         }
       } 
     };
@@ -87,14 +88,32 @@ export class ProjectTagComponent extends React.Component<any> {
 
   public setClasification(clasification: Clasification): void {
     let workout = this.state.workout;
-    workout.clasification = clasification.name;
+    workout.clasification = clasification;
+    this.setState({
+      workout: workout
+    });
+  }
+
+  public setSubclasification(subclasification: Subclasification): void {
+    let workout = this.state.workout;
+    workout.clasification.subclasification = subclasification;
     this.setState({
       workout: workout
     });
   }
 
   public clasificationColor(clasification: Clasification): string {
-    if (clasification.name === this.state.workout.clasification) {
+    if(!this.state.workout.clasification) return "";
+    if (clasification.name === this.state.workout.clasification.name) {
+      return "active";
+    }
+    return "";
+  }
+
+  public subclasificationColor(subclasification: Subclasification): string {
+    if (!this.state.workout.clasification || 
+      !this.state.workout.clasification.subclasification) return "";
+    if (subclasification.name === this.state.workout.clasification.subclasification.name) {
       return "active";
     }
     return "";
@@ -102,6 +121,19 @@ export class ProjectTagComponent extends React.Component<any> {
 
   public checkClasification(): any {
     if (this.state.workout.clasification) {
+      return (
+        <Icon type="check-circle" 
+          theme="twoTone" 
+          twoToneColor="#52c41a" 
+          className="space_icon"
+        />
+      )
+    }
+  }
+
+  public checkSubclasification(): any {
+    if (this.state.workout.clasification && 
+      this.state.workout.clasification.subclasification) {
       return (
         <Icon type="check-circle" 
           theme="twoTone" 
@@ -121,6 +153,34 @@ export class ProjectTagComponent extends React.Component<any> {
           className="space_icon"
         />
       )
+    }
+  }
+
+  public showSubclasification(): any {
+    if (this.state.workout.clasification && 
+      this.state.workout.clasification.subclasifications && 
+      this.state.workout.clasification.subclasifications.length > 0) {
+        return (
+          <div className="subclasification">
+            <div className="sublabel">
+              <Icon type="tag" /> Subclasificación del documento 
+              {this.checkSubclasification()}
+            </div>
+            <div className="text">¿A que subclasificación corresponde?</div>
+            <div className="options">
+              {this.state.workout.clasification.subclasifications.map(
+                (subclasification: Subclasification, index: number) => {
+                return (
+                  <Tag color={this.getColor(index)} key={index} 
+                    onClick={this.setSubclasification.bind(this, subclasification)}
+                    className={this.subclasificationColor(subclasification)}>
+                    {subclasification.name}
+                  </Tag>
+                );
+              })}
+            </div>
+          </div>
+        )
     }
   }
 
@@ -147,15 +207,17 @@ export class ProjectTagComponent extends React.Component<any> {
                 );
               })}
             </div>
+            {this.showSubclasification()}
           </div>
         );
       }
     }
   }
 
-  public tag(entity: Entity): void {
-    if (this.state.tmp_start && this.state.tmp_end) {
+  public tag(entity: Entity, document: boolean): void {
+    if (this.state.tmp_start !== null && this.state.tmp_end) {
       let workout = this.state.workout;
+      workout.documents = document;
       workout.tags.push(new DatasetItemTag({
         start: this.state.tmp_start,
         end: this.state.tmp_end,
@@ -173,7 +235,7 @@ export class ProjectTagComponent extends React.Component<any> {
   }
 
   public getEntities(): any {
-    if (this.state.project) {
+    if (this.state.project && !this.state.workout.documents) {
       let type = this.state.project.clasification_type;
       if (type === 3 || type === 2) {
         return (
@@ -187,7 +249,7 @@ export class ProjectTagComponent extends React.Component<any> {
               {this.state.project.entities.map((entity: Entity, index: number) => {
                 return (
                   <Tag color={this.getColor(index)}
-                    key={index} onClick={this.tag.bind(this, entity)}>
+                    key={index} onClick={this.tag.bind(this, entity, false)}>
                     {entity.name}
                   </Tag>
               )})}
@@ -199,6 +261,15 @@ export class ProjectTagComponent extends React.Component<any> {
   }
 
   public getEntitiesCat(): any {
+    if (this.state.workout.documents) {
+      return this.state.workout.tags.map((tag: DatasetItemTag, index: number) => {
+        return {
+          type: tag.type,
+          color: this.getColor(index)
+        }
+      });
+    }
+
     return this.state.project.entities.map((entity: Entity, index: number) => {
       return {
         type: entity.name,
@@ -207,12 +278,34 @@ export class ProjectTagComponent extends React.Component<any> {
     });
   }
 
+  public getDocumentSeparator(): any {
+    if ((!this.state.workout.documents && !(this.state.workout.tags && this.state.workout.tags.length > 0)) || 
+      this.state.workout.documents) {
+      return (
+        <div className="separator">
+          <div className="label">
+            <Icon type="highlight" /> Separador de documentos
+          </div>
+          <div className="text">Selecciona un trozo de texto y identificalo</div>
+          <Button type="primary" className="separator__button" 
+            onClick={this.tag.bind(this, new Entity({
+              tag: 'Document',
+              name: `Document ${this.state.workout.tags.length + 1}`
+            }), true)}>
+            <Icon type="file-text"></Icon> Separar Documento
+          </Button>
+        </div>
+      );
+    }
+  }
+
   public getSidebar(): any {
     return (
       <div className="sidebar">
         <div className="title"><Icon type="tool" /> Panel de herramientas</div>
         {this.getClasification()}
         {this.getEntities()}
+        {this.getDocumentSeparator()}
       </div>
     );
   }
@@ -231,14 +324,21 @@ export class ProjectTagComponent extends React.Component<any> {
   public save(): any {
     let type = this.state.project.clasification_type
     if (type === 3 || type === 1) {
-      if(!this.state.workout.clasification) {
+      if (!this.state.workout.clasification) {
         message.warning("Debe identificar la clasificación del texto antes de guardar");
+        return;
+      }
+
+      if (this.state.workout.clasification && 
+        this.state.workout.clasification.subclasifications && 
+        !this.state.workout.clasification.subclasification) {
+        message.warning("Debe identificar la subclasificación del texto antes de guardar");
         return;
       }
     }
 
-    if (type === 3 || type === 2) {
-      if(this.state.workout.tags.length === 0) {
+    if (!this.state.workout.documents && (type === 3 || type === 2)) {
+      if (this.state.workout.tags.length === 0) {
         message.warning("Debe identificar al menos una entidad dentro del texto");
         return;
       }
@@ -278,9 +378,23 @@ export class ProjectTagComponent extends React.Component<any> {
     })
   }
 
+  public deleteTag(tag: any): void {
+    let target = this.state.workout.tags.find((item: any) => {
+      return tag.start === item.start && tag.end === item.end && tag.type === item.type;
+    });
+    let workout = this.state.workout;
+    workout.tags.splice(this.state.workout.tags.indexOf(target));
+    // Clean if no have more tags
+    if (workout.tags.length === 0) {
+      workout.documents = false;
+    } 
+    this.setState({
+      workout: workout
+    });
+  }
+
   public getWorkout(): any {
     if (this.state.project && this.state.workout) {
-      console.log(this.state.workout)
       return (
         <div className="clasificator">
           {this.getSidebar()}
@@ -293,6 +407,7 @@ export class ProjectTagComponent extends React.Component<any> {
                 text={this.state.workout.datasetItem.text} 
                 ents={this.getEntitiesCat()}
                 spans={this.state.workout.tags}
+                delete={this.deleteTag.bind(this)}
               />
             </div>
             <div className="label"><Icon type="build" /> Metadata del texto.</div>
