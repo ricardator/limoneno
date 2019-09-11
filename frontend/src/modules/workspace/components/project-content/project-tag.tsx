@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { Breadcrumb, Icon, Tag, Table, Spin, Button, message, Modal, Empty } from 'antd';
+import { Breadcrumb, Icon, Tag, Table, Spin, Button, message, Modal, Empty, Tooltip } from 'antd';
 import { getWorkout } from '../../../../actions/doclasifications';
 import { Clasification } from '../../../../models/clasification';
 import { Entity } from '../../../../models/entity';
@@ -171,11 +171,13 @@ export class ProjectTagComponent extends React.Component<any> {
               {this.state.workout.clasification.subclasifications.map(
                 (subclasification: Subclasification, index: number) => {
                 return (
-                  <Tag color={this.getColor(index)} key={index} 
-                    onClick={this.setSubclasification.bind(this, subclasification)}
-                    className={this.subclasificationColor(subclasification)}>
-                    {subclasification.name}
-                  </Tag>
+                  <Tooltip placement="top" title={subclasification.description} key={index}>
+                    <Tag color={this.getColor(index)}
+                      onClick={this.setSubclasification.bind(this, subclasification)}
+                      className={this.subclasificationColor(subclasification)}>
+                      {subclasification.name}
+                    </Tag>
+                  </Tooltip>
                 );
               })}
             </div>
@@ -199,11 +201,13 @@ export class ProjectTagComponent extends React.Component<any> {
               {this.state.project.clasifications.map(
                 (clasification: Clasification, index: number) => {
                 return (
-                  <Tag color={this.getColor(index)} key={index} 
-                    onClick={this.setClasification.bind(this, clasification)}
-                    className={this.clasificationColor(clasification)}>
-                    {clasification.name}
-                  </Tag>
+                  <Tooltip placement="top" title={clasification.description} key={index}>
+                    <Tag color={this.getColor(index)} 
+                      onClick={this.setClasification.bind(this, clasification)}
+                      className={this.clasificationColor(clasification)}>
+                      {clasification.name}
+                    </Tag>
+                  </Tooltip>
                 );
               })}
             </div>
@@ -221,7 +225,7 @@ export class ProjectTagComponent extends React.Component<any> {
       workout.tags.push(new DatasetItemTag({
         start: this.state.tmp_start,
         end: this.state.tmp_end,
-        type: entity.name
+        type: entity.tag
       }));
 
       this.setState({
@@ -248,10 +252,12 @@ export class ProjectTagComponent extends React.Component<any> {
             <div className="options">
               {this.state.project.entities.map((entity: Entity, index: number) => {
                 return (
-                  <Tag color={this.getColor(index)}
-                    key={index} onClick={this.tag.bind(this, entity, false)}>
-                    {entity.name}
-                  </Tag>
+                  <Tooltip placement="top" title={entity.description} key={index}>
+                    <Tag color={this.getColor(index)}
+                      onClick={this.tag.bind(this, entity, false)}>
+                      {entity.name}
+                    </Tag>
+                  </Tooltip>
               )})}
             </div>
           </div>
@@ -272,7 +278,7 @@ export class ProjectTagComponent extends React.Component<any> {
 
     return this.state.project.entities.map((entity: Entity, index: number) => {
       return {
-        type: entity.name,
+        type: entity.tag,
         color: this.getColor(index)
       }
     });
@@ -289,7 +295,7 @@ export class ProjectTagComponent extends React.Component<any> {
           <div className="text">Selecciona un trozo de texto y identificalo</div>
           <Button type="primary" className="separator__button" 
             onClick={this.tag.bind(this, new Entity({
-              tag: 'Document',
+              tag: `Document`,
               name: `Document ${this.state.workout.tags.length + 1}`
             }), true)}>
             <Icon type="file-text"></Icon> Separar Documento
