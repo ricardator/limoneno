@@ -120,8 +120,8 @@ export default class ProjectService {
       const data = {"users_pool": usersPool}
       RestService.post(`projects/${id}/assign_pool`, data).subscribe(response => {
         let target = this.projects.find(item => {
-          return item.id === id;
-        });
+          return item.id === id
+        })
 
         if (target) {
           this.projects[this.projects.indexOf(target)] = response.data;
@@ -129,13 +129,13 @@ export default class ProjectService {
 
         observe.next(this.projects.map(project => {
           return new Project(project);
-        }));
+        }))
 
-        observe.complete();
+        observe.complete()
       }, error => {
-        observe.error(error);
-        observe.complete();
-      });
-    });
+        observe.error(error)
+        observe.complete()
+      })
+    })
   }
 }
