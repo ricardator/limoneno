@@ -115,7 +115,7 @@ export default class ProjectService {
     });
   }
 
-  public assignPool(id: number, usersPool: {}): Observable<Project[]> {
+  assignPool(id: number, usersPool: {}): Observable<Project[]> {
     return new Observable<Project[]>(observe => {
       const data = {"users_pool": usersPool}
       RestService.post(`projects/${id}/assign_pool`, data).subscribe(response => {

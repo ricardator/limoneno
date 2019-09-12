@@ -1,9 +1,6 @@
 import * as React from 'react';
 import './mapper.scss';
 import 'antd/dist/antd.css';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { Modal, Button, InputNumber, message } from 'antd';
 import { User } from '../../../../models/user';
 
@@ -15,7 +12,7 @@ export class DatasetItemMapperComponent extends React.Component<any, any> {
     this.getAvailablePool = this.getAvailablePool.bind(this)
   }
 
-  public state: any = {
+  state: any = {
     currentUserPool: {}
   }
 
@@ -110,15 +107,4 @@ interface IProps {
   close: any
 }
 
-// Configure React-redux store functions
-function mapStateToProps(state: any) {
-  return {
-  }
-}
-
-function matchDispatchToProps(dispatch: any) {
-  return bindActionCreators({
-  }, dispatch);
-}
-
-export default connect(mapStateToProps, matchDispatchToProps)(withRouter(DatasetItemMapperComponent));
+export default DatasetItemMapperComponent;

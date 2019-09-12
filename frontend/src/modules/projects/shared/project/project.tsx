@@ -13,14 +13,14 @@ import DatasetItemMapperComponent from '../mapper/mapper';
 export class ProjectComponent extends React.Component<any> {
 
   // Define the props in component
-  public props: any;
+  props: any;
 
   // Define state variable
-  public state: any = {
+  state: any = {
     asingModal: false
-  };
+  }
 
-  public showUsers(): any {
+  showUsers(): any {
     return (
       this.props.project.users.map((user: User) => {
         return (
@@ -34,16 +34,16 @@ export class ProjectComponent extends React.Component<any> {
     )
   }
 
-  public total(): number {
+  total(): number {
     return this.props.project.assignated + this.props.project.free_pool +
       this.props.project.free_pool_done + this.props.project.assignated_done;
   }
 
-  public done(): number {
+  done(): number {
     return this.props.project.assignated_done + this.props.project.free_pool_done;
   }
 
-  public progress(): number {
+  progress(): number {
     if (this.done() > 0) {
       return Math.floor(this.done() / this.total() * 100);
     } else {
@@ -51,7 +51,7 @@ export class ProjectComponent extends React.Component<any> {
     }
   }
 
-  public showDatasets(): any {
+  showDatasets(): any {
     return (
       this.props.project.datasets.map((dataset: Dataset) => {
         return <Tag color="orange" key={dataset.id}>{dataset.name}</Tag>
@@ -59,7 +59,7 @@ export class ProjectComponent extends React.Component<any> {
     )
   }
 
-  public delete(): void {
+  delete(): void {
     let self = this;
     Modal.confirm({
       title: 'Desea eliminar este proyecto?',
@@ -67,16 +67,16 @@ export class ProjectComponent extends React.Component<any> {
       onOk() {
         self.props.destroyProject(self.props.project);
       }
-    });
+    })
   }
 
-  public loadElements(): void {
+  loadElements(): void {
     this.setState({
       asingModal: true
     })
   }
 
-  public showModal(): any {
+  showModal(): any {
     if (this.state.asingModal) {
       return (
         <DatasetItemMapperComponent
@@ -89,18 +89,18 @@ export class ProjectComponent extends React.Component<any> {
     }
   }
 
-  public closeModal(): any {
+  closeModal(): any {
     this.setState({
       asingModal: false
     })
   }
 
-  public assignPool(usersPool: {}): any {
+  assignPool(usersPool: {}): any {
     this.props.assignPool(this.props.project.id, usersPool)
     this.closeModal()
   }
 
-  public render() {
+  render() {
     return (
       <div className="project">
         <div className="project__name">
@@ -146,7 +146,7 @@ function matchDispatchToProps(dispatch: any) {
   return bindActionCreators({
     destroyProject,
     assignPool
-  }, dispatch);
+  }, dispatch)
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(withRouter(ProjectComponent));
