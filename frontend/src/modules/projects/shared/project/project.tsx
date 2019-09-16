@@ -35,16 +35,17 @@ export class ProjectComponent extends React.Component<any> {
   }
 
   total = (): number => {
-    return this.props.project.assignated + this.props.project.free_pool +
-      this.props.project.free_pool_done + this.props.project.assignated_done;
+    const { assignated, free_pool, free_pool_done, assignated_done } = this.props.project
+    return assignated + free_pool + free_pool_done + assignated_done
   }
 
   done = (): number => {
-    return this.props.project.assignated_done + this.props.project.free_pool_done;
+    const { free_pool_done, assignated_done } = this.props.project
+    return assignated_done + free_pool_done;
   }
 
   progress = (): number => {
-    if (!(this.done() > 0)) return 0
+    if (this.done() === 0) return 0
 
     return Math.floor(this.done() / this.total() * 100);
   }
