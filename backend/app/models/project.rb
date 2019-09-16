@@ -17,27 +17,12 @@ class Project < ApplicationRecord
     tmp[:datasets] = project.datasets
     tmp[:users] = project.users
 
-    tmp[:assignated] = ProjectDatasetItem.where(
-      project_id: project.id,
-      status: [0, -1]
-    ).count(:id)
+    project_dataset_items = ProjectDatasetItem.where(project_id: id).to_a
 
-    tmp[:assignated_done] = ProjectDatasetItem.where(
-      project_id: project.id,
-      status: 1
-    ).count(:id)
-
-    tmp[:free_pool_done] = ProjectDatasetItem.where(
-      project_id: project.id,
-      status: 2
-    ).count(:id)
-
-    tmp[:free_pool] = Project.where(
-      id: project.id
-    ).joins(:datasets)
-    .joins('INNER JOIN dataset_items ON datasets.id = dataset_items.dataset_id')
-    .joins('LEFT OUTER JOIN project_dataset_items ON project_dataset_items.project_id = projects.id AND dataset_items.id = project_dataset_items.dataset_item_id')
-    .where('project_dataset_items.id IS NULL').count('*')
+    tmp[:assignated] = project_dataset_items.count{ |item| item.status == 0 || item.status == 1 }
+    tmp[:assignated_done] = project_dataset_items.count{ |item| item.status == 1 }
+    tmp[:free_pool_done] = project_dataset_items.count{ |item| item.status == 2 }
+    tmp[:free_pool] = Project.free_pool(id).size
 
     tmp
   end

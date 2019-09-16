@@ -81,36 +81,8 @@ module Versions
 
       get do
         projects = Project.all
-                          .includes(:users, :datasets)
-
         projects = projects.map do |project|
-          tmp = project.attributes
-          tmp[:datasets] = project.datasets
-          tmp[:users] = project.users
-
-          tmp[:assignated] = ProjectDatasetItem.where(
-            project_id: project.id,
-            status: [0, -1]
-          ).count(:id)
-
-          tmp[:assignated_done] = ProjectDatasetItem.where(
-            project_id: project.id,
-            status: 1
-          ).count(:id)
-
-          tmp[:free_pool_done] = ProjectDatasetItem.where(
-            project_id: project.id,
-            status: 2
-          ).count(:id)
-
-          tmp[:free_pool] = Project.where(
-            id: project.id
-          ).joins(:datasets)
-          .joins('INNER JOIN dataset_items ON datasets.id = dataset_items.dataset_id')
-          .joins('LEFT OUTER JOIN project_dataset_items ON project_dataset_items.project_id = projects.id AND dataset_items.id = project_dataset_items.dataset_item_id')
-          .where('project_dataset_items.id IS NULL').count('datasets.id')
-
-          tmp
+          Project.with_dependencies(project.id)
         end
 
         projects
