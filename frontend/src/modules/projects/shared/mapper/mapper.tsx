@@ -50,7 +50,7 @@ export class DatasetItemMapperComponent extends React.Component<any> {
     this.props.action(this.state.currentUserPool);
   }
 
-  updateFreePool = (value: any, userId: any): void => {
+  updateFreePool = (userId: any, value: any, ): void => {
     const { currentUserPool } = this.state
     const newPool = { ...currentUserPool, [userId]: value }
     if (this.getAvailablePool() === 0 && newPool[userId] > currentUserPool[userId]) {
