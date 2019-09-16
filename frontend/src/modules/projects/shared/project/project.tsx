@@ -20,7 +20,7 @@ export class ProjectComponent extends React.Component<any> {
     asingModal: false
   }
 
-  showUsers(): any {
+  showUsers = (): any => {
     return (
       this.props.project.users.map((user: User) => {
         return (
@@ -34,24 +34,22 @@ export class ProjectComponent extends React.Component<any> {
     )
   }
 
-  total(): number {
+  total = (): number => {
     return this.props.project.assignated + this.props.project.free_pool +
       this.props.project.free_pool_done + this.props.project.assignated_done;
   }
 
-  done(): number {
+  done = (): number => {
     return this.props.project.assignated_done + this.props.project.free_pool_done;
   }
 
-  progress(): number {
-    if (this.done() > 0) {
-      return Math.floor(this.done() / this.total() * 100);
-    } else {
-      return 0;
-    }
+  progress = (): number => {
+    if (!(this.done() > 0)) return 0
+
+    return Math.floor(this.done() / this.total() * 100);
   }
 
-  showDatasets(): any {
+  showDatasets = (): any => {
     return (
       this.props.project.datasets.map((dataset: Dataset) => {
         return <Tag color="orange" key={dataset.id}>{dataset.name}</Tag>
@@ -59,7 +57,7 @@ export class ProjectComponent extends React.Component<any> {
     )
   }
 
-  delete(): void {
+  delete = (): void => {
     let self = this;
     Modal.confirm({
       title: 'Desea eliminar este proyecto?',
@@ -70,32 +68,32 @@ export class ProjectComponent extends React.Component<any> {
     })
   }
 
-  loadElements(): void {
+  loadElements = (): void => {
     this.setState({
       asingModal: true
     })
   }
 
-  showModal(): any {
-    if (this.state.asingModal) {
-      return (
-        <DatasetItemMapperComponent
-          action={this.assignPool.bind(this)}
-          close={this.closeModal.bind(this)}
-          project={this.props.project}
-        >
-        </DatasetItemMapperComponent>
-      )
-    }
+  showModal = (): any => {
+    if (!this.state.asingModal) return
+
+    return (
+      <DatasetItemMapperComponent
+        action={this.assignPool}
+        close={this.closeModal}
+        project={this.props.project}
+      >
+      </DatasetItemMapperComponent>
+    )
   }
 
-  closeModal(): any {
+  closeModal = (): any => {
     this.setState({
       asingModal: false
     })
   }
 
-  assignPool(usersPool: {}): any {
+  assignPool = (usersPool: {}): any => {
     this.props.assignPool(this.props.project.id, usersPool)
     this.closeModal()
   }
@@ -118,7 +116,7 @@ export class ProjectComponent extends React.Component<any> {
         </div>
         <div className="project__actions">
           <Button className="space"
-            onClick={this.loadElements.bind(this, {})}>
+            onClick={this.loadElements}>
             <Icon type="usergroup-add" />Asignar
           </Button>
           <Link to={`/projects/${this.props.project.id}`}>
@@ -126,7 +124,7 @@ export class ProjectComponent extends React.Component<any> {
               Editar
             </Button>
           </Link>
-          <Button type="danger" onClick={this.delete.bind(this)}>
+          <Button type="danger" onClick={this.delete}>
             <Icon type="delete" /> Eliminar
           </Button>
         </div>

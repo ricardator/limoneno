@@ -7,7 +7,7 @@ class Project < ApplicationRecord
   has_many :users, through: :project_users
   has_many :datasets, through: :project_datasets
 
-  def self.project_with_dependencies(id)
+  def self.with_dependencies(id)
     project = Project.where(
       id: id
     ).includes(:users)
@@ -42,9 +42,9 @@ class Project < ApplicationRecord
     tmp
   end
 
-  def self.free_pool(project_id)
+  def self.free_pool(id)
     Project.where(
-      id: project_id
+      id: id
     ).joins(:datasets)
     .joins('INNER JOIN dataset_items ON datasets.id = dataset_items.dataset_id')
     .joins('LEFT OUTER JOIN project_dataset_items ON project_dataset_items.project_id = projects.id AND dataset_items.id = project_dataset_items.dataset_item_id')

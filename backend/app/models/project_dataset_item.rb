@@ -4,7 +4,7 @@ class ProjectDatasetItem < ApplicationRecord
   belongs_to :dataset
   belongs_to :dataset_item
 
-  def self.create_users_pool(users_pool, project_id, user_id)
+  def self.create_users_pool(users_pool, project_id)
     free_pool = Project.free_pool(project_id)
     users_pool.each do |user_id, pool|
       user_pool = free_pool.shift(pool)

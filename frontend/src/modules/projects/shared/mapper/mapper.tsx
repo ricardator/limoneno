@@ -4,19 +4,12 @@ import 'antd/dist/antd.css';
 import { Modal, Button, InputNumber, message } from 'antd';
 import { User } from '../../../../models/user';
 
-export class DatasetItemMapperComponent extends React.Component<any, any> {
-
-  // Define the props in component
-  constructor(props: any){
-    super(props)
-    this.getAvailablePool = this.getAvailablePool.bind(this)
-  }
-
+export class DatasetItemMapperComponent extends React.Component<any> {
   state: any = {
     currentUserPool: {}
   }
 
-  showProjectUsers(): any {
+  showProjectUsers = (): any => {
     return (
       <div className="users_list">
         <div className="users_item dark">
@@ -45,11 +38,11 @@ export class DatasetItemMapperComponent extends React.Component<any, any> {
     )
   }
 
-  close(): void {
+  close = (): void => {
     this.props.close(this);
   }
 
-  action(): void {
+  action = (): void => {
     if (this.getAvailablePool() === this.props.project.free_pool){
       this.close()
       return
@@ -57,7 +50,7 @@ export class DatasetItemMapperComponent extends React.Component<any, any> {
     this.props.action(this.state.currentUserPool);
   }
 
-  updateFreePool(userId: any, value: any): void {
+  updateFreePool = (value: any, userId: any): void => {
     const { currentUserPool } = this.state
     const newPool = { ...currentUserPool, [userId]: value }
     if (this.getAvailablePool() === 0 && newPool[userId] > currentUserPool[userId]) {
@@ -82,9 +75,9 @@ export class DatasetItemMapperComponent extends React.Component<any, any> {
       <Modal
           title="Asignar Carga"
           visible={true}
-          onCancel={this.close.bind(this, {})}
+          onCancel={this.close}
           footer={[
-            <Button key="mapper" type="primary" onClick={this.action.bind(this, {})}>
+            <Button key="mapper" type="primary" onClick={this.action}>
               Asignar
             </Button>
           ]}>
@@ -99,12 +92,6 @@ export class DatasetItemMapperComponent extends React.Component<any, any> {
       </Modal>
     )
   }
-}
-
-interface IProps {
-  project: any,
-  action: any,
-  close: any
 }
 
 export default DatasetItemMapperComponent;

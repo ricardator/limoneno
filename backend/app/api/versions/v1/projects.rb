@@ -120,7 +120,7 @@ module Versions
       get ':id' do
         id = params[:id]
 
-        project = Project.project_with_dependencies(id)
+        project = Project.with_dependencies(id)
       end
 
       route_param :project_id do
@@ -132,10 +132,10 @@ module Versions
           project_id = params[:project_id]
           users_pool = params[:users_pool]
 
-          ProjectDatasetItem.create_users_pool(users_pool, project_id, user_id)
+          ProjectDatasetItem.create_users_pool(users_pool, project_id)
 
           status 200
-          Project.project_with_dependencies(project_id)
+          Project.with_dependencies(project_id)
         end
       end
 
@@ -153,9 +153,7 @@ module Versions
             ).includes(:project)
 
             projects_stats = projects.map do |project|
-              tmp = Project.where(
-                id: project.id
-              ).includes(:users).first.attributes
+              tmp = Project.where(id: project.id).includes(:users).first.attributes
 
               tmp[:assignated] = ProjectDatasetItem.where(
                 project_id: project.id,
