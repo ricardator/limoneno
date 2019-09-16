@@ -16,7 +16,7 @@ class Project < ApplicationRecord
 
     project_dataset_items = ProjectDatasetItem.where(project_id: id).to_a
 
-    tmp[:assignated] = project_dataset_items.count { |item| item.status.zero?|| item.status == 1 }
+    tmp[:assignated] = project_dataset_items.count { |item| item.status.zero? || item.status == 1 }
     tmp[:assignated_done] = project_dataset_items.count { |item| item.status == 1 }
     tmp[:free_pool_done] = project_dataset_items.count { |item| item.status == 2 }
     tmp[:free_pool] = Project.free_pool(id).size
