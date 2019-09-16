@@ -132,29 +132,9 @@ module Versions
           project_id = params[:project_id]
           users_pool = params[:users_pool]
 
-          free_pool = Project.where(
-            id: project_id
-          ).joins(:datasets)
-          .joins('INNER JOIN dataset_items ON datasets.id = dataset_items.dataset_id')
-          .joins('LEFT OUTER JOIN project_dataset_items ON project_dataset_items.project_id = projects.id AND dataset_items.id = project_dataset_items.dataset_item_id')
-          .where('project_dataset_items.id IS NULL')
-          .select('dataset_items.id, datasets.id AS dataset').to_a
-
-          users_pool.each do |user_id, pool|
-            user_pool = free_pool.shift(pool)
-            user_pool.each do |item|
-              ProjectDatasetItem.create(
-                user_id: user_id,
-                project_id: project_id,
-                status: 0,
-                dataset_id: item.dataset,
-                dataset_item_id: item.id
-              )
-            end
-          end
+          ProjectDatasetItem.create_users_pool(users_pool, project_id, user_id)
 
           status 200
-
           Project.project_with_dependencies(project_id)
         end
       end

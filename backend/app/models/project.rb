@@ -41,4 +41,14 @@ class Project < ApplicationRecord
 
     tmp
   end
+
+  def self.free_pool(project_id)
+    Project.where(
+      id: project_id
+    ).joins(:datasets)
+    .joins('INNER JOIN dataset_items ON datasets.id = dataset_items.dataset_id')
+    .joins('LEFT OUTER JOIN project_dataset_items ON project_dataset_items.project_id = projects.id AND dataset_items.id = project_dataset_items.dataset_item_id')
+    .where('project_dataset_items.id IS NULL')
+    .select('dataset_items.id, datasets.id AS dataset').to_a
+  end
 end
