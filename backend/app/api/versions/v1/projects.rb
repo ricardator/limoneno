@@ -64,25 +64,15 @@ module Versions
 
       # DELETE DATASET METHOD
       delete ':id' do
-        id = params[:id]
-
-        ProjectUser.where(
-          project_id: id
-        ).delete_all
-
-        ProjectDataset.where(
-          project_id: id
-        ).delete_all
-
-        Project.delete(id)
+        Project.destroy(params[:id])
 
         status 204
       end
 
       get do
-        projects = Project.all
-        projects = projects.map do |project|
-          Project.with_dependencies(project.id)
+        project_ids = Project.all.pluck(:id)
+        projects = project_ids.map do |id|
+          Project.with_dependencies(id)
         end
 
         projects
@@ -90,9 +80,7 @@ module Versions
 
       # GET UNIQUE PROJECT
       get ':id' do
-        id = params[:id]
-
-        project = Project.with_dependencies(id)
+        project = Project.with_dependencies(params[:id])
       end
 
       route_param :project_id do
@@ -103,7 +91,6 @@ module Versions
         post :assign_pool do
           project_id = params[:project_id]
           users_pool = params[:users_pool]
-
           ProjectDatasetItem.create_users_pool(users_pool, project_id)
 
           status 200
