@@ -1,6 +1,7 @@
 require 'services/midas_service'
 module DatasetService 
   class Files
+    
     def self.upload_pdf(file)
       stored = false
       if file[:data]
@@ -14,11 +15,11 @@ module DatasetService
       dataset_item = {
         dataset_id: file[:dataset_id],
         name: file[:name],
-        text: '',
+        text: nil,
         mime: file[:mime],
         metadata: file[:metadata],
         url: file[:url],
-        status: 2, 
+        status: DatasetItem.statuses[:loading], 
         stored: stored
       }
 
@@ -43,7 +44,7 @@ module DatasetService
         mime: file[:mime],
         metadata: file[:metadata],
         url: file[:url],
-        status: 1,
+        status: DatasetItem.statuses[:active],
         stored: stored
       }])
 

@@ -7,11 +7,11 @@ class PdfConvertion < ActiveJob::Base
       text = MidasService::MidasClient.get_file_text(file)
       DatasetItem.update(dataset[:id], {
         text: text,
-        status: 1
+        status: DatasetItem.statuses[:active]
       });
     rescue
       DatasetItem.update(dataset[:id], {
-        status: 3
+        status: DatasetItem.statuses[:error]
       });
     end
 end
