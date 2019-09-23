@@ -7,11 +7,12 @@ require 'open-uri'
 module MidasService
   # Utils class to consume Midas OCR service
   class MidasClient
-    MIDAS_HOST = ENV['MIDAS_HOST'] || 'midas.caseflow.lemontech.com:80'
+    MIDAS_HOST = ENV['OCR_HOST']
     FILE_ENCODING = 'ASCII-8BIT'
 
     # For PDF files use 'file_type = Midas::InputFormat::PDF'
     def self.get_file_text(file, file_type = Midas::InputFormat::INPUT_FORMAT_AUTO)
+      puts file
       raise(Exception, 'File not provided.') unless file.present?
 
       request = prepare_request(file, file_type)
