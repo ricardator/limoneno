@@ -1,5 +1,5 @@
 require 'services/midas_service'
-class PdfConvertion < ActiveJob::Base
+class PdfConvertion < Sidekiq::Worker
     queue_as :default
     
     def perform(file, dataset)
