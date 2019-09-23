@@ -31,6 +31,8 @@ group :development, :test do
 end
 
 group :development do
+  gem 'grpc'
+  gem 'grpc-tools'
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
@@ -41,7 +43,7 @@ end
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 # Dotenv
-gem 'dotenv-rails', groups: %i[development test]
+gem 'dotenv-rails', '~> 2.1', '>= 2.1.1',:groups => [:development, :test, :production]
 
 # Mysql database
 gem 'mysql2'
@@ -63,3 +65,9 @@ gem 'grape-jwt-authentication'
 
 # AWS SDK
 gem 'aws-sdk', '~> 3'
+
+# Sidekiq for job managment
+gem 'sidekiq'
+
+# Foreman for run with procfiles
+gem 'foreman'
