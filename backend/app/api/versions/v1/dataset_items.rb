@@ -32,22 +32,6 @@ module Versions
             return status 415 unless file
           end
 
-          result = []
-
-          file.each do |item|
-            ditem = DatasetItem.create({
-              dataset_id: dataset_id,
-              name: item[:name],
-              mime: mime,
-              text: item[:text],
-              metadata: item[:metadata],
-              url: item[:url],
-              status: item[:status]
-            });
-
-            result.push(ditem) if ditem
-          end
-
           status 201
 
           file
