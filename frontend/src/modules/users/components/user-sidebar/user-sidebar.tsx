@@ -54,7 +54,7 @@ export class UserSidebarComponent extends React.Component<IUser> {
   }
 
   public setAdmin(options: any, event: any): void {
-    this.props.user.admin = event.target.value;
+    this.props.user.admin = event.target.checked;
   }
 
   public editButton(): any {
@@ -108,7 +108,7 @@ export class UserSidebarComponent extends React.Component<IUser> {
             <Form.Item className="checkbox">
               <Checkbox 
                 onChange={this.setAdmin.bind(this, {})}
-                checked={this.props.user.admin}
+                defaultChecked={this.props.user.admin}
               />
               <span className="checkbox__label">¿Es Administrador?</span>
             </Form.Item>
