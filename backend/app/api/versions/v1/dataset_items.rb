@@ -26,7 +26,8 @@ module Versions
           when "text/plain"
             file = DatasetService::Files.upload_txt params
           when "text/csv"
-            file = DatasetService::Files.upload_csv params
+            # file = DatasetService::Files.upload_csv params
+            return status 415 unless file
           else
             return status 415 unless file
           end
@@ -49,7 +50,7 @@ module Versions
 
           status 201
 
-          result
+          file
         end
 
         # UPDATE DATASET METHOD
