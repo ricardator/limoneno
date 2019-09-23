@@ -9,11 +9,11 @@ test:
   slot: 0
 
 staging:
-  host: limoneno-staging.tmcxaq.0001.use1.cache.amazonaws.com
+  host: <%= ENV['REDIS_HOST'] %>
   port: 6379
   slot: 0
 
 production:
-  host: limoneno-staging.tmcxaq.0001.use1.cache.amazonaws.com
+  host: <%= ENV['REDIS_HOST'] %>
   port: 6379
   slot: 0
