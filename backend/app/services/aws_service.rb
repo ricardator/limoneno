@@ -1,5 +1,3 @@
-require 'aws-sdk'
-
 module AwsService
   class S3
     def self.config
