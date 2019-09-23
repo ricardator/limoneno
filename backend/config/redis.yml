@@ -1,0 +1,19 @@
+development:
+  host: 127.0.0.1
+  port: 6379
+  slot: 0
+
+test:
+  host: 127.0.0.1
+  port: 6379
+  slot: 0
+
+staging:
+  host: limoneno-staging.tmcxaq.0001.use1.cache.amazonaws.com
+  port: 6379
+  slot: 0
+
+production:
+  host: limoneno-staging.tmcxaq.0001.use1.cache.amazonaws.com
+  port: 6379
+  slot: 0
