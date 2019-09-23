@@ -54,7 +54,7 @@ export class UserSidebarComponent extends React.Component<IUser> {
   }
 
   public setAdmin(options: any, event: any): void {
-    this.props.user.admin = event.target.checked;
+    this.props.user.admin = event.target.value;
   }
 
   public editButton(): any {
