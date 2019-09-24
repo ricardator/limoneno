@@ -5,6 +5,20 @@ require 'database_cleaner'
 
 class DatasetServiceTest < Minitest::Test
   include FactoryBot::Syntax::Methods
+
+  def test_upload_mime
+    mock = {
+      name: 'mock.pdf',
+      dataset_id: 1,
+      mime: 'application/json'
+    }
+    exception = assert_raises Exception do
+      DatasetService::Files.upload_item(mock)
+    end
+    assert_equal('Unknown format', exception.message)
+  end
+
+
   # Tests for save pdf files
   class PdfDataset < Minitest::Test
     # Tests for save pdf files
@@ -22,20 +36,6 @@ class DatasetServiceTest < Minitest::Test
       assert_equal('Data or URL required', exception.message)
     end
 
-    def test_is_not_pdf
-
-      mock = {
-        name: 'mock.pdf',
-        dataset_id: 1,
-        mime: 'plain/txt'
-      }
-
-      exception = assert_raises Exception do
-        DatasetService::Files.upload_pdf(mock)
-      end
-      assert_equal('The mime type indicates a no pdf file', exception.message)
-    end
-
     def test_upload_pdf
       DatasetServiceTest.factory
       uploaded = DatasetService::Files.upload_pdf(mock_data)
@@ -46,7 +46,7 @@ class DatasetServiceTest < Minitest::Test
         text: nil,
         url: 'https://limoneno.s3.amazonaws.com/datasets/1/items/sample_file.pdf',
         status: 'loading',
-      }, DatasetServiceTest.result(uploaded)[0])
+      }, DatasetServiceTest.result(uploaded))
     end
 
     def mock_data
@@ -82,20 +82,6 @@ class DatasetServiceTest < Minitest::Test
       assert_equal('Data or URL required', exception.message)
     end
 
-    def test_is_not_txt
-
-      mock = {
-        name: 'mock.pdf',
-        dataset_id: 1,
-        mime: 'application/json'
-      }
-
-      exception = assert_raises Exception do
-        DatasetService::Files.upload_item(mock)
-      end
-      assert_equal('Unknown format', exception.message)
-    end
-
     def test_upload_txt
       DatasetServiceTest.factory
       uploaded = DatasetService::Files.upload_txt(mock_data)
@@ -106,7 +92,7 @@ class DatasetServiceTest < Minitest::Test
         text: 'Lorem ipsum dolor sit amet',
         url: 'https://limoneno.s3.amazonaws.com/datasets/1/items/sample_txt.txt',
         status: 'active'
-      }, DatasetServiceTest.result(uploaded)[0])
+      }, DatasetServiceTest.result(uploaded))
     end
     
     def mock_data
@@ -127,24 +113,55 @@ class DatasetServiceTest < Minitest::Test
   class UtilsDataset < Minitest::Test
     include FactoryBot::Syntax::Methods
 
-    def test_save_dataset
-      DatasetServiceTest.factory
-      dataset = DatasetService::Files.save_dataset([{
+    def test_params_to_item_fail_content
+      exception = assert_raises Exception do
+        DatasetService::Files.params_to_item({
+          name: 'sample_txt.txt',
+          dataset_id: 1,
+          mime: 'text/plain',
+          status: DatasetItem.statuses[:active]
+        })
+      end
+      assert_equal('Data or URL required', exception.message)
+    end
+
+    def test_params_to_item_with_url
+      params = DatasetService::Files.params_to_item({
         name: 'sample_txt.txt',
         dataset_id: 1,
         mime: 'text/plain',
-        text: 'Lorem ipsum dolor sit amet',
         url: 'https://limoneno.s3.amazonaws.com/datasets/1/items/sample_txt.txt',
         status: DatasetItem.statuses[:active]
-      }])
-      assert_equal([{
+      })
+      assert({
+        dataset_id: 1,
+        name: 'sample_txt.txt',
+        text: nil,
+        mime: 'text/plain',
+        metadata: nil,
+        url: 'https://limoneno.s3.amazonaws.com/datasets/1/items/sample_txt.txt',
+        status: :active,
+        stored: false
+      }, params)
+    end
+
+    def test_params_to_item_with_data
+      params = DatasetService::Files.params_to_item({
         name: 'sample_txt.txt',
         dataset_id: 1,
         mime: 'text/plain',
-        text: 'Lorem ipsum dolor sit amet',
-        url: 'https://limoneno.s3.amazonaws.com/datasets/1/items/sample_txt.txt',
-        status: 'active'
-      }],DatasetServiceTest.result(dataset))
+        data: 'FAKE_BASE64DATA',
+        status: DatasetItem.statuses[:active]
+      })
+      assert({
+        dataset_id: 1,
+        name: 'sample_txt.txt',
+        text: nil,
+        mime: 'text/plain',
+        metadata: nil,
+        status: :active,
+        stored: false
+      }, params)
     end
   end
 
@@ -155,20 +172,14 @@ class DatasetServiceTest < Minitest::Test
   end
 
   def self.result(data)
-    result = []
-
-    data.each do |item|
-      result.push({
-        name: item[:name],
-        dataset_id: item[:dataset_id],
-        mime: item[:mime],
-        text: item[:text],
-        url: item[:url],
-        status: item[:status]
-      })
-    end
-
-    result
+    {
+      name: data[:name],
+      dataset_id: data[:dataset_id],
+      mime: data[:mime],
+      text: data[:text],
+      url: data[:url],
+      status: data[:status]
+    }
   end
 
   def create_dataset
