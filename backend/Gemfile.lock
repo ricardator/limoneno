@@ -854,7 +854,11 @@ GEM
       thor (>= 0.13.6)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+<<<<<<< HEAD
     google-protobuf (3.9.1-universal-darwin)
+=======
+    google-protobuf (3.9.1)
+>>>>>>> 41f78027470da85f2d0c6e83f384bd5004aa3421
     googleapis-common-protos-types (1.0.4)
       google-protobuf (~> 3.0)
     grape (1.2.4)
@@ -870,7 +874,7 @@ GEM
       httparty
       jwt (~> 2.1)
       recursive-open-struct (~> 1.0)
-    grpc (1.23.0-universal-darwin)
+    grpc (1.23.0)
       google-protobuf (~> 3.8)
       googleapis-common-protos-types (~> 1.0)
     grpc-tools (1.23.0)
