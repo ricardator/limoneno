@@ -14,7 +14,8 @@ module DatasetService
 
     private
 
-    def self.params_to_item(params)
+    def self.params_to_item(params, mime)
+      raise "The mime type indicates a #{mime} file" if file[:mime] != mime
       raise 'Data or URL required' if params[:url].blank? && params[:data].blank?
 
       {
@@ -30,8 +31,7 @@ module DatasetService
     end
 
     def self.upload_pdf(params)
-      raise 'The mime type indicates a no txt file' if file[:mime] != 'text/plain'
-      item = params_to_item(params)
+      item = params_to_item(params, 'text/plain')
 
       # Requires AWS
       if params[:data].present? && params[:url].blank?
