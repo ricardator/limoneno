@@ -436,18 +436,16 @@ export class DraftProjectComponent extends React.Component<any> {
   }
 
   setClasifications(clasifications: Clasification[]): void {
-    let project = this.state.project;
-    project.clasifications = clasifications;
+    const editedProject = { ...this.state.project, clasifications };
     this.setState({
-      project: project
+      project: editedProject
     });
   }
 
   setEntities(entities: Entity[]): void {
-    let project = this.state.project;
-    project.entities = entities;
+    const editedProject = { ...this.state.project, entities };
     this.setState({
-      project: project
+      project: editedProject
     });
   }
 
