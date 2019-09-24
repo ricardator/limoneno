@@ -1,8 +1,11 @@
 require 'services/midas_service'
 module DatasetService 
   class Files
-    
+
     def self.upload_pdf(file)
+      # Verifications
+      raise 'The mime type indicates a no pdf file' if file[:mime] != 'application/pdf'
+      raise 'Need provided a content or file' if !file[:url] && !file[:data]
       stored = false
       # Requires AWS
       if file[:data]
@@ -33,6 +36,9 @@ module DatasetService
     end
 
     def self.upload_txt(file)
+      # Verifications
+      raise 'The mime type indicates a no txt file' if file[:mime] != 'plain/text'
+      raise 'Need provided a content or file' if !file[:url] && !file[:data]
       stored = false
       if file[:data]
         data = Base64.decode64(file[:data])
@@ -57,7 +63,6 @@ module DatasetService
     end
 
     def self.upload_csv(file)
-      puts "csv"
       true
     end
 
