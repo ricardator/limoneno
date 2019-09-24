@@ -29,5 +29,9 @@ module AwsService
         }
       })
     end
+
+    def self.getURL(object)
+      "https://#{object.bucket_name}.s3.amazonaws.com/#{object.key}"
+    end
   end
 end
