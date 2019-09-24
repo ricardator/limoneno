@@ -4,9 +4,13 @@ module DatasetService
     
     def self.upload_pdf(file)
       stored = false
+      # Requires AWS
       if file[:data]
         data = Base64.decode64(file[:data])
-        stored = self.save_s3 file
+        file_saved = self.save_s3 file, data
+        file[:url] = AwsService::S3.getURL(file_saved) if file_saved
+        data = self.download_file(file[:url])
+        stored = true if file_saved
       elsif file[:url]
         data = self.download_file(file[:url])
       end
@@ -24,7 +28,7 @@ module DatasetService
       }
 
       result = self.save_dataset([dataset_item])
-      PdfConvertion.perform_later(data, result[0])
+      PdfConvertion.perform_async(file[:url], result[0][:id])
       result
     end
 
@@ -32,7 +36,8 @@ module DatasetService
       stored = false
       if file[:data]
         data = Base64.decode64(file[:data])
-        stored = self.save_s3 file
+        file_saved = self.save_s3 file, data
+        file[:url] = AwsService::S3.getURL(file_saved)
       elsif file[:url]
         data = self.download_file(file[:url])
       end
@@ -56,14 +61,14 @@ module DatasetService
       true
     end
 
-    def self.save_s3(file)
+    def self.save_s3(file, data)
       if ActiveRecord::Type::Boolean.new.cast(ENV['AWS_SAVE'])
         key = "datasets/#{file[:dataset_id]}/items/#{file[:name]}"
-        return true if AwsService::S3.upload_file(key, file)
+        return AwsService::S3.upload_file(key, data)
       end
-    rescue ex
+    rescue StandardError => ex
       puts "Hubo un error mientras se subia el archivo al bucket en S3"
-      return false
+      return nil
     end
 
     def self.save_dataset(file)
@@ -87,7 +92,7 @@ module DatasetService
     end
 
     def self.download_file(link)
-      open(file[:url])
+      open(link).read
     end
   end
 end
