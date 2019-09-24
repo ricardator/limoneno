@@ -80,12 +80,12 @@ function mapStateToProps(state: any) {
       list: state.project.user_projects
     }
   }
-  
+
   function matchDispatchToProps(dispatch: any) {
     return bindActionCreators({
       setProject,
       getUserProjects
     }, dispatch);
   }
-  
+
 export default connect(mapStateToProps, matchDispatchToProps)(withRouter(ProjectShowcaseComponent));

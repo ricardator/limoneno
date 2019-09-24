@@ -76,17 +76,17 @@ export class ProjectShowcaseComponent extends React.Component {
 }
 
 // Configure React-redux store functions
-function mapStateToProps(state: any) {
+  function mapStateToProps(state: any) {
     return {
       list: state.project.list
     }
   }
-  
+
   function matchDispatchToProps(dispatch: any) {
     return bindActionCreators({
       setProject,
       getProjects
     }, dispatch);
   }
-  
+
 export default connect(mapStateToProps, matchDispatchToProps)(withRouter(ProjectShowcaseComponent));

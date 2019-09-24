@@ -7,14 +7,20 @@ import { withRouter, Link } from 'react-router-dom';
 import { Icon, Progress, Tooltip, Tag, Button, Modal } from 'antd';
 import { User } from '../../../../models/user';
 import { Dataset } from '../../../../models/dataset';
-import { destroyProject } from '../../../../actions/doprojects';
+import { destroyProject, assignPool } from '../../../../actions/doprojects';
+import DatasetItemMapperComponent from '../mapper/mapper';
 
 export class ProjectComponent extends React.Component<any> {
 
   // Define the props in component
-  public props: any;
+  props: any;
 
-  public showUsers(): any {
+  // Define state variable
+  state: any = {
+    asingModal: false
+  }
+
+  showUsers = (): any => {
     return (
       this.props.project.users.map((user: User) => {
         return (
@@ -28,24 +34,23 @@ export class ProjectComponent extends React.Component<any> {
     )
   }
 
-  public total(): number {
-    return this.props.project.assignated + this.props.project.free_pool + 
-    this.props.project.free_pool_done + this.props.project.assignated_done; 
+  total = (): number => {
+    const { assignated, free_pool, free_pool_done, assignated_done } = this.props.project
+    return assignated + free_pool + free_pool_done + assignated_done
   }
 
-  public done(): number {
-    return this.props.project.assignated_done + this.props.project.free_pool_done;
+  done = (): number => {
+    const { free_pool_done, assignated_done } = this.props.project
+    return assignated_done + free_pool_done;
   }
 
-  public progress(): number {
-    if (this.done() > 0) {
-      return Math.floor(this.done() / this.total()  * 100);
-    } else {
-      return 0;
-    } 
+  progress = (): number => {
+    if (this.done() === 0) return 0
+
+    return Math.floor(this.done() / this.total() * 100);
   }
 
-  public showDatasets(): any {
+  showDatasets = (): any => {
     return (
       this.props.project.datasets.map((dataset: Dataset) => {
         return <Tag color="orange" key={dataset.id}>{dataset.name}</Tag>
@@ -53,7 +58,7 @@ export class ProjectComponent extends React.Component<any> {
     )
   }
 
-  public delete(): void {
+  delete = (): void => {
     let self = this;
     Modal.confirm({
       title: 'Desea eliminar este proyecto?',
@@ -61,10 +66,40 @@ export class ProjectComponent extends React.Component<any> {
       onOk() {
         self.props.destroyProject(self.props.project);
       }
-    });
+    })
   }
 
-  public render() {
+  loadElements = (): void => {
+    this.setState({
+      asingModal: true
+    })
+  }
+
+  showModal = (): any => {
+    if (!this.state.asingModal) return
+
+    return (
+      <DatasetItemMapperComponent
+        action={this.assignPool}
+        close={this.closeModal}
+        project={this.props.project}
+      >
+      </DatasetItemMapperComponent>
+    )
+  }
+
+  closeModal = (): any => {
+    this.setState({
+      asingModal: false
+    })
+  }
+
+  assignPool = (usersPool: {}): any => {
+    this.props.assignPool(this.props.project.id, usersPool)
+    this.closeModal()
+  }
+
+  render() {
     return (
       <div className="project">
         <div className="project__name">
@@ -81,16 +116,20 @@ export class ProjectComponent extends React.Component<any> {
           <Progress percent={this.progress()} />
         </div>
         <div className="project__actions">
-          <Button className="space"><Icon type="usergroup-add" />Asignar</Button>
+          <Button className="space"
+            onClick={this.loadElements}>
+            <Icon type="usergroup-add" />Asignar
+          </Button>
           <Link to={`/projects/${this.props.project.id}`}>
             <Button type="primary" className="space"><Icon type="edit" />
               Editar
             </Button>
           </Link>
-          <Button type="danger" onClick={this.delete.bind(this)}>
+          <Button type="danger" onClick={this.delete}>
             <Icon type="delete" /> Eliminar
           </Button>
         </div>
+        {this.showModal()}
       </div>
     )
   }
@@ -98,14 +137,15 @@ export class ProjectComponent extends React.Component<any> {
 
 // Configure React-redux store functions
 function mapStateToProps(state: any) {
-    return {
-    }
+  return {
   }
-  
-  function matchDispatchToProps(dispatch: any) {
-    return bindActionCreators({
-      destroyProject
-    }, dispatch);
-  }
-  
+}
+
+function matchDispatchToProps(dispatch: any) {
+  return bindActionCreators({
+    destroyProject,
+    assignPool
+  }, dispatch)
+}
+
 export default connect(mapStateToProps, matchDispatchToProps)(withRouter(ProjectComponent));
