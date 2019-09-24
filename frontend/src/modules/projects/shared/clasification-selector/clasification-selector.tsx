@@ -200,9 +200,9 @@ export default class ClasificatorSelectorComponent extends React.Component<
       <div className="labels">
         <div className="description_label">Subclasificaciones: </div>
         <div className="tags">
-          {subclasifications.map((subclasification: any, index: number) => {
+          {subclasifications.map((subclasification: any) => {
             return (
-              <div className="tag" key={index}>
+              <div className="tag" key={subclasification.tag}>
                 <div className="title">{subclasification.name}</div>
                 <div className="close">
                   <Icon
