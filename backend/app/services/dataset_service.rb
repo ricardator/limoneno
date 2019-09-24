@@ -37,7 +37,7 @@ module DatasetService
 
     def self.upload_txt(file)
       # Verifications
-      raise 'The mime type indicates a no txt file' if file[:mime] != 'plain/text'
+      raise 'The mime type indicates a no txt file' if file[:mime] != 'text/plain'
       raise 'Need provided a content or file' if !file[:url] && !file[:data]
       stored = false
       if file[:data]
