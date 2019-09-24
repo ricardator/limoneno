@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import { Tag, Icon } from 'antd';
 import { DatasetItemTag } from '../../../../models/dataset-item-tag';
 
-export default class Taggy extends React.Component<any> {
+export class Taggy extends React.Component<any> {
   // Define the props in component
   props: any;
   state: any = {
