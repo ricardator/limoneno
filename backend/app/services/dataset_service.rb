@@ -7,7 +7,7 @@ module DatasetService
     def self.upload_item(params)
       case params[:mime]
       when 'application/pdf' then upload_pdf(params)
-      when 'plain/text' then upload_txt(params)
+      when 'text/plain' then upload_txt(params)
       else raise 'Unknown format'
       end
     end
@@ -47,14 +47,26 @@ module DatasetService
 
     def self.upload_txt(params)
       item = params_to_item(params)
+
+
       item[:text] = Base64.decode64(params[:data])
+      
+      # Requires AWS fi want save the file
+      if params[:data].present? && params[:url].blank?
+        data = Base64.decode64(params[:data])
+        item[:url] = save_s3(item, item[:text])
+        raise 'Failed to upload file' if item[:url].blank?
+        item[:stored] = true
+      end
+
       item[:status] = :active
 
       DatasetItem.create(item)
     end
 
     def self.save_s3(item, data)
-      key = "datasets/#{item[:dataset_id]}/items/#{SecureRandom.uuid}/#{item[:name]}"
+      # key = "datasets/#{item[:dataset_id]}/items/#{SecureRandom.uuid}/#{item[:name]}"
+      key = "datasets/#{item[:dataset_id]}/items/#{item[:name]}"
       AwsService::S3.upload_file(key, data)
     rescue StandardError => ex
       puts "Hubo un error mientras se subia el archivo al bucket en S3"
