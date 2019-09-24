@@ -74,3 +74,14 @@ export const getUserProjects = () => {
     });
   }
 };
+
+export const assignPool = (id: number, usersPool: {}) => {
+  return (dispatch: any, getState: any) => {
+    ProjectService.getInstance().assignPool(id, usersPool).subscribe(data => {
+      dispatch({
+        payload: data,
+        type: UPDATE_PROJECTS
+      });
+    });
+  }
+};

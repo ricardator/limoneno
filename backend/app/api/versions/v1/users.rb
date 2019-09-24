@@ -40,7 +40,7 @@ module Versions
         email = params[:email]
         password = params[:password]
         admin = params[:admin]
-        
+
         user = User.create({
           name: name,
           email: email,
@@ -63,14 +63,14 @@ module Versions
         email = params[:email]
         password = params[:password]
         admin = params[:admin]
-        
+
         User.update(id, {
           name: name,
           email: email,
           admin: admin
         })
 
-        if (password) 
+        if (password)
           User.update(id, {
             password: password
           })
@@ -80,12 +80,12 @@ module Versions
       rescue
         status 500
       end
-      
+
       # DELETE USER METHOD
       delete ':id' do
         id = params[:id]
-        
-        User.find(id).delete;
+
+        User.find(id).delete
 
         status 204
       end

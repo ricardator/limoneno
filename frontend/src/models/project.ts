@@ -28,12 +28,12 @@ export class Project {
         this.assignated_done = project ? project.assignated_done : 0;
         this.free_pool = project ? project.free_pool : 0;
         this.free_pool_done = project ? project.free_pool_done : 0;
-       
+
         if (project && project.entities) {
             if (typeof project.entities === 'string') {
                 project.entities = JSON.parse(project.entities);
             }
-           
+
             this.entities = project.entities.map((entity: any) => {
                 return new Entity(entity);
             });
@@ -43,7 +43,7 @@ export class Project {
             if (typeof project.clasifications    === 'string') {
                 project.clasifications = JSON.parse(project.clasifications);
             }
-            
+
             this.clasifications = project.clasifications
             .map((clasification: any) => {
                 return new Clasification(clasification);
@@ -68,7 +68,7 @@ export class Project {
                 return new User(datasetItems);
             });
         }
-        
+
     }
 
     public getDatasetsIds(): number[] | null  {
@@ -98,7 +98,9 @@ export class Project {
             entities: this.entities || undefined,
             clasifications: this.clasifications || undefined,
             datasets: this.getDatasetsIds() || undefined,
-            users: this.getUsersIds() || undefined
+            users: this.getUsersIds() || undefined,
+            assignated: this.assignated || undefined,
+            free_pool:  this.free_pool || undefined
         };
     }
 }

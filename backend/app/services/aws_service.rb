@@ -16,7 +16,7 @@ module AwsService
           body: body,
           key: key,
       })
-      object
+      object.public_url
     end
 
     def self.delete_file(key)
