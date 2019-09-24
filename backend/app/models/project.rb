@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Project < ApplicationRecord
+  serialize :entities, JSON
+  serialize :clasifications, JSON
+
   has_many :project_datasets, dependent: :destroy
   has_many :project_users, dependent: :destroy
   has_many :project_dataset_items, dependent: :destroy
