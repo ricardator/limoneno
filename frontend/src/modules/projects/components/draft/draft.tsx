@@ -46,11 +46,18 @@ export class DraftProjectComponent extends React.Component<any> {
   };
 
   componentDidMount() {
-    const { getDatasets, getUsers, match } = this.props;
+    const {
+      getDatasets,
+      getUsers,
+      match: {
+        params: { id }
+      }
+    } = this.props;
+
     getDatasets();
     getUsers();
-    if (match.params.id) {
-      getProject(match.params.id);
+    if (id) {
+      this.props.getProject(id);
     } else {
       this.setState({
         project: new Project({
@@ -392,27 +399,40 @@ export class DraftProjectComponent extends React.Component<any> {
   }
 
   activateEntities(type: number): any {
-    if (type === 1 && this.state.project.clasification_type !== 1) {
-      this.state.project.clasification_type += this.state.clasification
-        ? -1
-        : 1;
+    const { project, clasification, entities } = this.state;
+    let editedClasificationType = project.clasification_type;
+
+    if (type === 1 && project.clasification_type !== 1) {
+      editedClasificationType += clasification ? -1 : 1;
+      const editedProject = {
+        ...project,
+        clasification_type: editedClasificationType
+      };
+
       this.setState({
-        clasification: !this.state.clasification,
-        project: this.state.project
+        clasification: !clasification,
+        project: editedProject
       });
       return;
     }
 
-    if (type === 2 && this.state.project.clasification_type !== 2) {
-      this.state.project.clasification_type += this.state.entities ? -2 : 2;
+    if (type === 2 && project.clasification_type !== 2) {
+      editedClasificationType += entities ? -2 : 2;
+      const editedProject = {
+        ...project,
+        clasification_type: editedClasificationType
+      };
+
       this.setState({
-        entities: !this.state.entities,
-        project: this.state.project
+        entities: !entities,
+        project: editedProject
       });
       return;
     }
 
-    message.warning('Debe mantener al menos una de los tipos de identificación');
+    message.warning(
+      'Debe mantener al menos una de los tipos de identificación'
+    );
   }
 
   setClasifications(clasifications: Clasification[]): void {
