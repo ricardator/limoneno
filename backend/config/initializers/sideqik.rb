@@ -11,7 +11,7 @@ Sidekiq.configure_server do |config|
   ActiveRecord::Base.configurations[Rails.env]['pool'] = pool_size
   ActiveRecord::Base.establish_connection
 end
-    
+
 Sidekiq.configure_client do |config|
   template = ERB.new(File.new('config/redis.yml').read)
   redis_config = YAML.load(template.result(binding))[Rails.env]
