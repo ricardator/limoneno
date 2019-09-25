@@ -43,7 +43,7 @@ end
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 # Dotenv
-gem 'dotenv-rails', groups: %i[development test]
+gem 'dotenv-rails', '~> 2.1', '>= 2.1.1', groups: %i[development test]
 
 # Mysql database
 gem 'mysql2'
@@ -64,4 +64,13 @@ gem 'jwt'
 gem 'grape-jwt-authentication'
 
 # AWS SDK
-gem 'aws-sdk', '~> 3'
+gem 'aws-sdk-s3', '~> 1'
+
+# Sidekiq for job managment
+gem 'sidekiq'
+
+# Database Cleaner and factory bot
+group :test do
+  gem 'database_cleaner'
+  gem 'factory_bot_rails'
+end

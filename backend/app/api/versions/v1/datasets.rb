@@ -14,7 +14,7 @@ module Versions
       end
       post do
         name = params[:name]
-        
+
         dataset = Dataset.create({
           name: name
         })
@@ -31,21 +31,21 @@ module Versions
       patch do
         id = params[:id]
         name = params[:name]
-        
+
         Dataset.update(id, {
           name: name
-        });
+        })
 
         status 204
       rescue
         status 500
       end
-      
+
       # DELETE DATASET METHOD
       delete ':id' do
         id = params[:id]
-        
-        Dataset.destroy(id);
+
+        Dataset.destroy(id)
 
         status 204
       end
@@ -62,11 +62,11 @@ module Versions
       # GET UNIQUE DATASET
       get ':id' do
         id = params[:id]
-        
+
         dataset = Dataset.where({
           id: id
         }).includes(:dataset_items)
-        .as_json(include: :dataset_items).first;
+        .as_json(include: :dataset_items).first
 
         present dataset
       end
