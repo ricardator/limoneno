@@ -24,6 +24,6 @@ class ProjectTest < Minitest::Test
 
     project = Project.with_dependencies(project_dataset.project_id)
 
-    refute_empty(project)
+    assert project.present?
   end
 end
