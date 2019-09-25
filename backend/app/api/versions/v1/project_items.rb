@@ -15,16 +15,16 @@ module Versions
         end
         post do
           name = params[:name]
-          
+
           dataset = Dataset.create({
             name: name
           })
-  
+
           dataset
         rescue
           status 500
         end
-  
+
         # UPDATE DATASET METHOD
         params do
           requires :id, :name
@@ -32,42 +32,42 @@ module Versions
         patch do
           id = params[:id]
           name = params[:name]
-          
+
           Dataset.update(id, {
             name: name
-          });
-  
+          })
+
           status 204
         rescue
           status 500
         end
-        
+
         # DELETE DATASET METHOD
         delete ':id' do
           id = params[:id]
-          
-          Dataset.destroy(id);
-  
+
+          Dataset.destroy(id)
+
           status 204
         end
-  
-  
+
+
         get do
           Dataset.all
         end
-  
+
         # GET UNIQUE DATASET
         get ':id' do
           id = params[:id]
-          
+
           dataset = Dataset.where({
             id: id
           }).includes(:dataset_items)
-          .as_json(include: :dataset_items).first;
-  
+          .as_json(include: :dataset_items).first
+
           present dataset
         end
-  
+
         mount V1::DatasetItems
       end
     end
