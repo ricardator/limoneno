@@ -38,13 +38,13 @@ class DatasetServiceTest < Minitest::Test
 
     def test_upload_pdf
       DatasetServiceTest.factory
-      uploaded = DatasetService::Files.upload_pdf(mock_data)
+      uploaded = DatasetService::Files.upload_item(mock_data)
       assert_equal({
         name: 'sample_file.pdf',
         dataset_id: 1,
         mime: 'application/pdf',
         text: nil,
-        url: 'https://limoneno.s3.amazonaws.com/datasets/1/items/sample_file.pdf',
+        url: 'https://limoneno.s3.amazonaws.com/datasets/1/items/RANDOM_UUID/sample_file.pdf',
         status: 'loading',
       }, DatasetServiceTest.result(uploaded))
     end
@@ -53,7 +53,7 @@ class DatasetServiceTest < Minitest::Test
       mock_file_path = "#{Rails.root}/test/fixtures/files/sample_file.pdf"
       content = File.binread(mock_file_path)
       encoded = Base64.encode64(content)
-      
+
       {
         name: 'sample_file.pdf',
         dataset_id: 1,
@@ -67,7 +67,7 @@ class DatasetServiceTest < Minitest::Test
   # Tests for save txt files
   class TxtDataset < Minitest::Test
     include FactoryBot::Syntax::Methods
-    
+
     def test_content_or_url_is_nil
 
       mock = {
@@ -84,22 +84,22 @@ class DatasetServiceTest < Minitest::Test
 
     def test_upload_txt
       DatasetServiceTest.factory
-      uploaded = DatasetService::Files.upload_txt(mock_data)
+      uploaded = DatasetService::Files.upload_item(mock_data)
       assert_equal({
         name: 'sample_txt.txt',
         dataset_id: 1,
         mime: 'text/plain',
         text: 'Lorem ipsum dolor sit amet',
-        url: 'https://limoneno.s3.amazonaws.com/datasets/1/items/sample_txt.txt',
+        url: nil,
         status: 'active'
       }, DatasetServiceTest.result(uploaded))
     end
-    
+
     def mock_data
       mock_file_path = "#{Rails.root}/test/fixtures/files/sample_txt.txt"
       content = File.binread(mock_file_path)
       encoded = Base64.encode64(content)
-      
+
       {
         name: 'sample_txt.txt',
         dataset_id: 1,
@@ -109,77 +109,17 @@ class DatasetServiceTest < Minitest::Test
     end
   end
 
-  # Tests for save txt files
-  class UtilsDataset < Minitest::Test
-    include FactoryBot::Syntax::Methods
-
-    def test_params_to_item_fail_content
-      exception = assert_raises Exception do
-        DatasetService::Files.params_to_item({
-          name: 'sample_txt.txt',
-          dataset_id: 1,
-          mime: 'text/plain',
-          status: DatasetItem.statuses[:active]
-        })
-      end
-      assert_equal('Data or URL required', exception.message)
-    end
-
-    def test_params_to_item_with_url
-      params = DatasetService::Files.params_to_item({
-        name: 'sample_txt.txt',
-        dataset_id: 1,
-        mime: 'text/plain',
-        url: 'https://limoneno.s3.amazonaws.com/datasets/1/items/sample_txt.txt',
-        status: DatasetItem.statuses[:active]
-      })
-      assert({
-        dataset_id: 1,
-        name: 'sample_txt.txt',
-        text: nil,
-        mime: 'text/plain',
-        metadata: nil,
-        url: 'https://limoneno.s3.amazonaws.com/datasets/1/items/sample_txt.txt',
-        status: :active,
-        stored: false
-      }, params)
-    end
-
-    def test_params_to_item_with_data
-      params = DatasetService::Files.params_to_item({
-        name: 'sample_txt.txt',
-        dataset_id: 1,
-        mime: 'text/plain',
-        data: 'FAKE_BASE64DATA',
-        status: DatasetItem.statuses[:active]
-      })
-      assert({
-        dataset_id: 1,
-        name: 'sample_txt.txt',
-        text: nil,
-        mime: 'text/plain',
-        metadata: nil,
-        status: :active,
-        stored: false
-      }, params)
-    end
-  end
-
   def self.factory
     test = new DatasetServiceTest
     test.clean_database
     test.create_dataset
   end
 
-  def self.result(data)
-    {
-      name: data[:name],
-      dataset_id: data[:dataset_id],
-      mime: data[:mime],
-      text: data[:text],
-      url: data[:url],
-      status: data[:status]
-    }
+  def self.result(item)
+    data = item.slice(:name, :dataset_id, :mime, :text, :url, :status).symbolize_keys
+    regexp_uuid = /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/
+    data[:url] = data[:url]&.sub(regexp_uuid, 'RANDOM_UUID')
+    data
   end
 
   def create_dataset
