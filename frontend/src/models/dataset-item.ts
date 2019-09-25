@@ -13,7 +13,7 @@ export class DatasetItem {
         this.name = item ? item.name : null;
         this.mime = item ? item.mime : null;
         this.text = item ? item.text : null;
-        this.metadata = item ? JSON.parse(item.metadata) : null;
+        this.metadata = item ? item.metadata : null;
         this.url = item ? item.url : null;
         this.status = item ? item.status : null;
         this.dataset = item ? item.dataset_id : null;;

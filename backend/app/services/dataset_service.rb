@@ -1,8 +1,10 @@
 require 'securerandom'
+require 'services/midas_service'
+require 'open-uri'
 
 module DatasetService
   class Files
-    VALID_TYPES = ['application/pdf', 'plain/text']
+    VALID_TYPES = ['application/pdf', 'text/plain']
 
     def self.upload_item(params)
       case params[:mime]
@@ -12,12 +14,23 @@ module DatasetService
       end
     end
 
+    def self.extract_remote_text(id)
+      item = DatasetItem.find id
+      text = case item.mime
+             when 'application/pdf' then MidasService::MidasClient.get_remote_file_text(item.url)
+             when 'text/plain' then URI.open(item.url).read
+             end
+      item.update(text: text, status: :active)
+    rescue
+      item&.update(status: :error)
+    end
+
     private
 
-    def self.params_to_item(params)
+    def self.create_item(params)
       raise 'Data or URL required' if params[:url].blank? && params[:data].blank?
 
-      {
+      item = {
         dataset_id: params[:dataset_id],
         name: params[:name],
         text: nil,
@@ -27,41 +40,28 @@ module DatasetService
         status: :loading,
         stored: false
       }
+
+      yield(item) if params[:data].present? && params[:url].blank?
+
+      dataset_item = DatasetItem.create(item)
+      TextExtractionWorker.perform_async(dataset_item.id) if item[:url].present?
+      dataset_item
     end
 
     def self.upload_pdf(params)
-      item = params_to_item(params)
-
-      # Requires AWS
-      if params[:data].present? && params[:url].blank?
+      create_item(params) do |item|
         data = Base64.decode64(params[:data])
         item[:url] = save_s3(item, data)
         raise 'Failed to upload file' if item[:url].blank?
         item[:stored] = true
       end
-
-      dataset_item = DatasetItem.create(item)
-      PdfConversionWorker.perform_async(dataset_item.id)
-      dataset_item
     end
 
     def self.upload_txt(params)
-      item = params_to_item(params)
-
-
-      item[:text] = Base64.decode64(params[:data])
-      
-      # Requires AWS fi want save the file
-      if params[:data].present? && params[:url].blank?
-        data = Base64.decode64(params[:data])
-        item[:url] = save_s3(item, item[:text])
-        raise 'Failed to upload file' if item[:url].blank?
-        item[:stored] = true
+      create_item(params) do |item|
+        item[:text] = Base64.decode64(params[:data])
+        item[:status] = :active
       end
-
-      item[:status] = :active
-
-      DatasetItem.create(item)
     end
 
     def self.save_s3(item, data)
