@@ -18,4 +18,12 @@ class ProjectTest < Minitest::Test
 
     assert_equal(0, free_pool_size)
   end
+
+  def test_with_dependencies
+    project_dataset = create(:project_dataset, :with_item)
+
+    project = Project.with_dependencies(project_dataset.project_id)
+
+    refute_empty(project)
+  end
 end
