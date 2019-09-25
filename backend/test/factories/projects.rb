@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :project do
-    name { 'Test' }
-    description { 'A dataset test' }
+    name { Faker::Lorem.sentence }
+    description { Faker::Lorem.sentence }
     clasification_type { 3 }
     entities { '[{"name":"entity"}]' }
     clasifications { '[{"name":"clasification"}]' }
