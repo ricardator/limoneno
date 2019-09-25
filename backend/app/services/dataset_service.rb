@@ -65,8 +65,7 @@ module DatasetService
     end
 
     def self.save_s3(item, data)
-      # key = "datasets/#{item[:dataset_id]}/items/#{SecureRandom.uuid}/#{item[:name]}"
-      key = "datasets/#{item[:dataset_id]}/items/#{item[:name]}"
+      key = "datasets/#{item[:dataset_id]}/items/#{SecureRandom.uuid}/#{item[:name]}"
       AwsService::S3.upload_file(key, data)
     rescue StandardError => ex
       puts "Hubo un error mientras se subia el archivo al bucket en S3"
