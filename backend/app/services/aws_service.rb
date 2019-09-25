@@ -1,5 +1,3 @@
-require 'aws-sdk'
-
 module AwsService
   class S3
     def self.config
@@ -18,7 +16,7 @@ module AwsService
           body: body,
           key: key,
       })
-      object
+      object.public_url
     end
 
     def self.delete_file(key)

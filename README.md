@@ -30,13 +30,17 @@ En Mac se puede utilizar Homebrew para la instalación, o descargarlo desde el [
 ```bash
 # In Debian based linux
 sudo apt-get install ruby-full
-gem install rails
 # In RHEL based linux
 sudo yum install ruby
-gem install rails
 ```
 
 O puede usar su administrador de versiones de ruby ​​preferido.
+
+Luego instalar bundler y foreman
+```bash
+gem install bundler
+gem install foreman
+```
 
 - Install Nodejs and NPM
 ```bash
@@ -88,7 +92,7 @@ Posterior a esto debe iniciar la app en rails para desplegar el entorno de backe
 
 ```bash
 # Run rails app
-rails start
+foreman start
 ```
 
 ### Frontend

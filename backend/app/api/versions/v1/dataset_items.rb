@@ -11,45 +11,14 @@ module Versions
       namespace :items do
         # CREATE DATASET ITEM METHOD
         params do
-          requires :name, :mime
+          requires :name
+          requires :mime, values: DatasetService::Files::VALID_TYPES
+          exactly_one_of :url, :data
         end
         post do
-          name = params[:name]
-          mime = params[:mime]
-          dataset_id = params[:dataset_id]
-
-          return status 400 unless params[:data] || params[:url]
-
-          case mime
-          when "application/pdf"
-            file = DatasetService::Files.upload_pdf params
-          when "text/plain"
-            file = DatasetService::Files.upload_txt params
-          when "text/csv"
-            file = DatasetService::Files.upload_csv params
-          else
-            return status 415 unless file
-          end
-
-          result = []
-
-          file.each do |item|
-            ditem = DatasetItem.create({
-              dataset_id: dataset_id,
-              name: item[:name],
-              mime: mime,
-              text: item[:text],
-              metadata: item[:metadata],
-              url: item[:url],
-              status: item[:status]
-            });
-
-            result.push(ditem) if ditem
-          end
-
+          file = DatasetService::Files.upload_item params
           status 201
-
-          result
+          [file]
         end
 
         # UPDATE DATASET METHOD
@@ -67,7 +36,7 @@ module Versions
               text: params[:text],
               metadata: params[:metadata],
               url: params[:url]
-          });
+          })
 
           status 204
         end
@@ -84,7 +53,7 @@ module Versions
             AwsService::S3.delete_file()
           end
 
-          DatasetItem.destroy(id);
+          DatasetItem.destroy(id)
 
           status 204
         end
@@ -95,7 +64,7 @@ module Versions
 
           datasets = DatasetItem.where({
             id: id
-          }).first;
+          }).first
 
           datasets
         end
