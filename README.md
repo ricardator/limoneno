@@ -86,7 +86,6 @@ Luego es necesario crear la base de datos y correr las migraciones existentes pa
 rake db:create
 rake db:migrate
 rake db:seed
-rake db:test:load_schema
 ```
 
 Posterior a esto debe iniciar la app en rails para desplegar el entorno de backend. Para esto en el mismo directorio ejecute la siguiente instrucción.
