@@ -109,11 +109,7 @@ GEM
       thor (>= 0.13.6)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
-<<<<<<< HEAD
-    google-protobuf (3.9.1)
-=======
     google-protobuf (3.9.1-universal-darwin)
->>>>>>> c1a5ee30965afc36e93bb7268481d3ffaf9ed544
     googleapis-common-protos-types (1.0.4)
       google-protobuf (~> 3.0)
     grape (1.2.4)
