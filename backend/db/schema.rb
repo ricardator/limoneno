@@ -10,17 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_24_191051) do
+ActiveRecord::Schema.define(version: 2019_08_26_031013) do
 
   create_table "dataset_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "dataset_id", null: false
+    t.integer "dataset_id"
     t.string "name"
     t.string "mime"
     t.text "text"
-    t.text "metadata"
+    t.text "metadata", size: :long, collation: "utf8mb4_bin"
     t.text "url"
-    t.boolean "stored"
     t.integer "status"
+    t.boolean "stored"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
