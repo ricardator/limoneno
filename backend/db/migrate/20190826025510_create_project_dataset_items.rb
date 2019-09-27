@@ -8,7 +8,6 @@ class CreateProjectDatasetItems < ActiveRecord::Migration[6.0]
       t.string :clasification
       t.json :tags
       t.integer :status
-      t.boolean :documents
 
       t.timestamps
     end
