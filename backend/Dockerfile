@@ -16,4 +16,4 @@ EXPOSE 5000
 # Set env vars
 ENV RAILS_ENV production 
 # Run the app
-CMD ["bash", "-c", "rake db:create db:migrate db:seed && foreman start"]
+CMD ["bash", "-c", "rake db:migrate db:seed && foreman start"]
