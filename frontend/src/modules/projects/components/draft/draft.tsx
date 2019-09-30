@@ -155,12 +155,10 @@ export class DraftProjectComponent extends React.Component<any> {
   }
 
   actionButton(): any {
-    const {
-      project: { id }
-    } = this.props;
+    const { project } = this.props;
     const { loading } = this.state;
 
-    if (id) {
+    if (project && project.id) {
       return (
         <Button
           type="primary"

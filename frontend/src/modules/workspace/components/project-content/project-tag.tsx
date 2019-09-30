@@ -576,11 +576,7 @@ export class ProjectTagComponent extends React.Component<any> {
   }
 
   render() {
-    const {
-      id,
-      project: { name },
-      noWorkouts
-    } = this.props;
+    const { id, project, noWorkouts } = this.props;
 
     return (
       <div className="workout">
@@ -591,7 +587,7 @@ export class ProjectTagComponent extends React.Component<any> {
               <Link to="/workspace">Espacio de trabajo</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <Link to={`/projects/${id}`}>{name ? name : ''}</Link>
+              <Link to={`/projects/${id}`}>{project ? project.name : ''}</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>Clasificación</Breadcrumb.Item>
           </Breadcrumb>

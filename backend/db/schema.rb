@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_26_031013) do
+ActiveRecord::Schema.define(version: 2019_09_24_202014) do
 
   create_table "dataset_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "dataset_id"
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 2019_08_26_031013) do
     t.integer "user_id"
     t.integer "dataset_id"
     t.integer "dataset_item_id"
-    t.json "clasification"
+    t.text "clasification", size: :long, collation: "utf8mb4_bin"
     t.text "tags", size: :long, collation: "utf8mb4_bin"
     t.integer "status"
     t.boolean "documents"
