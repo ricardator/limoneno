@@ -18,4 +18,4 @@ ENV RAILS_ENV production
 # Install foreman
 RUN gem install foreman
 # Run the app
-CMD ["bash", "-c", "rake db:migrate db:seed && foreman start"]
+CMD ["bash", "-c", "rake db:migrate && foreman start"]
