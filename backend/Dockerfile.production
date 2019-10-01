@@ -1,3 +1,6 @@
+# This image its only for Docker swarm instances.
+# Need create secret LIMONENO with the env vars content
+
 # We use rails image 
 FROM ruby:2.6.3
 # Set limoneno like work folder
@@ -10,7 +13,8 @@ RUN bundle install
 COPY . .
 # Run the apidoc to make the api documentation
 # replace the env file
-RUN mv .env.production .env
+RUN ln -s /run/secrets/LIMONENO .env
+RUN ln -s /run/secrets/LIMONENO .env.production
 # Expose port 5000 to
 EXPOSE 5000
 # Set env vars
