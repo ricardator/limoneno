@@ -249,7 +249,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.2)
   byebug
   database_cleaner
-  dotenv-rails (~> 2.7.5)
+  dotenv-rails (~> 2.1, >= 2.1.1)
   factory_bot_rails
   faker
   grape
