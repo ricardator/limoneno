@@ -72,7 +72,7 @@ export class DraftProjectComponent extends React.Component<any> {
       .getProject(id)
       .subscribe(data => {
         this.setState({
-          project: data
+          project: new Project(data)
         });
       });
   }
@@ -402,10 +402,10 @@ export class DraftProjectComponent extends React.Component<any> {
 
     if (type === 1 && project.clasification_type !== 1) {
       editedClasificationType += clasification ? -1 : 1;
-      const editedProject = {
+      const editedProject = new Project({
         ...project,
         clasification_type: editedClasificationType
-      };
+      });
 
       this.setState({
         clasification: !clasification,
@@ -416,10 +416,10 @@ export class DraftProjectComponent extends React.Component<any> {
 
     if (type === 2 && project.clasification_type !== 2) {
       editedClasificationType += entities ? -2 : 2;
-      const editedProject = {
+      const editedProject = new Project({
         ...project,
         clasification_type: editedClasificationType
-      };
+      });
 
       this.setState({
         entities: !entities,
@@ -434,14 +434,14 @@ export class DraftProjectComponent extends React.Component<any> {
   }
 
   setClasifications(clasifications: Clasification[]): void {
-    const editedProject = { ...this.state.project, clasifications };
+    const editedProject = new Project({ ...this.state.project, clasifications });
     this.setState({
       project: editedProject
     });
   }
 
   setEntities(entities: Entity[]): void {
-    const editedProject = { ...this.state.project, entities };
+    const editedProject = new Project({ ...this.state.project, entities });
     this.setState({
       project: editedProject
     });
