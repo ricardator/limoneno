@@ -17,21 +17,16 @@ export default class DatasetService {
 
   public getDatasets(): Observable<Dataset[]> {
     return new Observable<Dataset[]>(observe => {
-      if (this.datasets.length === 0) {
-        RestService.get('datasets').subscribe(response => {
-          this.datasets = response.data.map((dataset: any) => {
-            return new Dataset(dataset);
-          });
-          observe.next(this.datasets);
-          observe.complete();
-        }, error => {
-          observe.error(error);
-          observe.complete();
+      RestService.get('datasets').subscribe(response => {
+        this.datasets = response.data.map((dataset: any) => {
+          return new Dataset(dataset);
         });
-      } else {
-          observe.next(this.datasets);
-          observe.complete();
-      }
+        observe.next(this.datasets);
+        observe.complete();
+      }, error => {
+        observe.error(error);
+        observe.complete();
+      });
     });
   }
 
