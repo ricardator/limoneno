@@ -48,12 +48,15 @@ export class ProjectTagComponent extends React.Component<any> {
       let selection = window.getSelection();
       if (this.state.workout) {
         try {
-          let text = this.state.workout.datasetItem.text;
-          let parent = selection.focusNode.parentNode.parentNode;
-          let parentMax = selection.focusNode.parentNode.parentNode.parentNode;
+          const text = this.state.workout.datasetItem.text;
+          const parent = (selection.focusNode && selection.focusNode.parentNode) ?
+            selection.focusNode.parentNode.parentNode:
+            null;
+          const parentMax = (parent) ? parent.parentNode : null;
           if (
-            parent.className === 'dataset__text' ||
-            parentMax.className === 'dataset__text'
+            parent && parentMax &&
+            (parent.className === 'dataset__text' ||
+            parentMax.className === 'dataset__text')
           ) {
             if (
               text.indexOf(selection.toString()) ===
