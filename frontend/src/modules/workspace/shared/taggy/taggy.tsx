@@ -3,6 +3,8 @@ import './taggy.scss';
 import 'antd/dist/antd.css';
 import { Tag, Icon } from 'antd';
 import { DatasetItemTag } from '../../../../models/dataset-item-tag';
+import { TaggyTag } from './taggy-tag/taggy-tag';
+import { TagItem } from './tag-item.interface';
 
 export class Taggy extends React.Component<any> {
   // Define the props in component
@@ -46,7 +48,7 @@ export class Taggy extends React.Component<any> {
     // Add the tag
     this.objects.push({
       text: item.text.slice(tag.start - item.start, tag.end - item.start),
-      start: tag.start + 1,
+      start: tag.start,
       end: tag.end,
       tag: true,
       color: type ? type.color : '#FFFFF',
@@ -54,23 +56,25 @@ export class Taggy extends React.Component<any> {
       label: type ? type.label : ''
     });
 
-    this.objects.push({
-      text: item.text.substring(0, tag.start - item.start),
-      start: item.start,
-      end: tag.start,
-      tag: false,
-      color: '',
-      type: '',
-      label: ''
-    });
+    if (item.start - tag.start !== 0) {
+      this.objects.push({
+        text: item.text.substring(0, tag.start - item.start),
+        start: item.start,
+        end: tag.start,
+        tag: false,
+        color: '',
+        type: '',
+        label: ''
+      });
+    }
 
     this.objects.push({
-      text: item.text.substring(tag.end - item.start, item.text.length - 1),
-      start: tag.end + 1,
+      text: item.text.substring(tag.end - item.start, item.text.length),
+      start: tag.end,
       end:
-        item.end === this.props.text.length - 1
+        item.end === this.props.text.length
           ? item.end
-          : item.text.length - 1,
+          : item.text.length,
       tag: false,
       color: '',
       type: '',
@@ -86,6 +90,10 @@ export class Taggy extends React.Component<any> {
     this.props.delete(tag);
   };
 
+  selectText(start: number, end: number): void {
+    this.props.select(start, end);
+  }
+
   draw(): any {
     this.analizeTags();
     return this.objects.map((tag: TagItem, index: number) => {
@@ -98,7 +106,9 @@ export class Taggy extends React.Component<any> {
           </Tag>
         );
       } else {
-        return tag.text;
+        return (
+          <TaggyTag offset={tag.start} tag={tag} key={index} select={this.selectText.bind(this)}></TaggyTag>
+        );
       }
     });
   }
@@ -106,14 +116,4 @@ export class Taggy extends React.Component<any> {
   render() {
     return <div>{this.draw()}</div>;
   }
-}
-
-interface TagItem {
-  text: string;
-  start: number;
-  end: number;
-  tag: boolean;
-  color: string;
-  type: string | null;
-  label: string | null;
 }
