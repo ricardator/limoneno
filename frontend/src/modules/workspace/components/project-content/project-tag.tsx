@@ -574,6 +574,7 @@ export class ProjectTagComponent extends React.Component<any> {
   }
 
   static getDerivedStateFromProps(props: any, state: any) {
+    if (state.project !== null && state.workout !== null) return state
     state.project = props.project;
     state.workout = props.workout;
     return state;
