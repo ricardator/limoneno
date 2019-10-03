@@ -137,13 +137,12 @@ export class ProjectTagComponent extends React.Component<any> {
     return '';
   }
 
-  subclasificationColor(checkingSubclasification: Subclasification): string {
-    const {
-      clasification: { subclasification }
-    } = this.state.workout;
+  subclasificationColor(subclasification: Subclasification): string {
+    const { clasification } = this.state.workout;
 
-    if (subclasification) return '';
-    if (checkingSubclasification.name === subclasification.name) {
+    if (!clasification || !clasification.subclasification) return '';
+
+    if (subclasification.name === clasification.subclasification.name) {
       return 'active';
     }
     return '';
