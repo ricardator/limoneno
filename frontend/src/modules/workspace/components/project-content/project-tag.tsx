@@ -49,14 +49,16 @@ export class ProjectTagComponent extends React.Component<any> {
       if (this.state.workout) {
         try {
           const text = this.state.workout.datasetItem.text;
-          const parent = (selection.focusNode && selection.focusNode.parentNode) ?
-            selection.focusNode.parentNode.parentNode:
-            null;
-          const parentMax = (parent) ? parent.parentNode : null;
+          const parent =
+            selection.focusNode && selection.focusNode.parentNode
+              ? selection.focusNode.parentNode.parentNode
+              : null;
+          const parentMax = parent ? parent.parentNode : null;
           if (
-            parent && parentMax &&
+            parent &&
+            parentMax &&
             (parent.className === 'dataset__text' ||
-            parentMax.className === 'dataset__text')
+              parentMax.className === 'dataset__text')
           ) {
             if (
               text.indexOf(selection.toString()) ===
@@ -420,12 +422,7 @@ export class ProjectTagComponent extends React.Component<any> {
 
   save = (): any => {
     const {
-      workout: {
-        clasification,
-        clasification: { subclasifications, subclasification },
-        documents,
-        tags
-      }
+      workout: { clasification, documents, tags }
     } = this.state;
     let type = this.state.project.clasification_type;
 
@@ -437,7 +434,11 @@ export class ProjectTagComponent extends React.Component<any> {
         return;
       }
 
-      if (subclasifications && !subclasification) {
+      if (
+        clasification &&
+        clasification.subclasifications &&
+        !clasification.subclasification
+      ) {
         message.warning(
           'Debe identificar la subclasificación del texto antes de guardar'
         );
