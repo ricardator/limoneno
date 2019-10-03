@@ -24,6 +24,7 @@ import { Taggy } from '../../shared/taggy/taggy';
 import ClasificationService from '../../../../services/clasification/clasification.service';
 import { ProjectDatasetItem } from '../../../../models/project-dataset-item';
 import { Subclasification } from '../../../../models/subclasification';
+import { TagItem } from '../../shared/taggy/tag-item.interface';
 
 declare var window: any;
 declare var document: any;
@@ -44,49 +45,6 @@ export class ProjectTagComponent extends React.Component<any> {
 
   componentDidMount() {
     this.props.getWorkout(this.props.match.params.id);
-    document.onselectionchange = () => {
-      let selection = window.getSelection();
-      if (this.state.workout) {
-        try {
-          let text = this.state.workout.datasetItem.text;
-          let parent = selection.focusNode.parentNode.parentNode;
-          let parentMax = selection.focusNode.parentNode.parentNode.parentNode;
-          if (
-            parent.className === 'dataset__text' ||
-            parentMax.className === 'dataset__text'
-          ) {
-            if (
-              text.indexOf(selection.toString()) ===
-              text.lastIndexOf(selection.toString())
-            ) {
-              this.setState({
-                tmp_start: text.indexOf(selection.toString()),
-                tmp_end:
-                  text.indexOf(selection.toString()) +
-                  selection.toString().length
-              });
-            } else {
-              let value = selection.baseNode.nodeValue;
-              let offset = this.state.workout.datasetItem.text.indexOf(value);
-
-              if (selection.anchorOffset < selection.focusOffset) {
-                this.setState({
-                  tmp_start: selection.anchorOffset + offset,
-                  tmp_end: selection.focusOffset + offset
-                });
-              } else {
-                this.setState({
-                  tmp_start: selection.focusOffset + offset,
-                  tmp_end: selection.anchorOffset + offset
-                });
-              }
-            }
-          }
-        } catch (e) {
-          message.error(e);
-        }
-      }
-    };
   }
 
   getColor(key: number): string {
@@ -132,13 +90,12 @@ export class ProjectTagComponent extends React.Component<any> {
     return '';
   }
 
-  subclasificationColor(checkingSubclasification: Subclasification): string {
-    const {
-      clasification: { subclasification }
-    } = this.state.workout;
+  subclasificationColor(subclasification: Subclasification): string {
+    const { clasification } = this.state.workout;
 
-    if (subclasification) return '';
-    if (checkingSubclasification.name === subclasification.name) {
+    if (!clasification || !clasification.subclasification) return '';
+
+    if (subclasification.name === clasification.subclasification.name) {
       return 'active';
     }
     return '';
@@ -274,14 +231,26 @@ export class ProjectTagComponent extends React.Component<any> {
     if (this.state.tmp_start !== null && this.state.tmp_end) {
       let workout = this.state.workout;
       workout.documents = document;
-      workout.tags.push(
-        new DatasetItemTag({
-          start: this.state.tmp_start,
-          end: this.state.tmp_end,
-          type: entity.tag,
-          label: entity.name
-        })
-      );
+      
+      const tag = new DatasetItemTag({
+        start: this.state.tmp_start,
+        end: this.state.tmp_end,
+        type: entity.tag,
+        label: entity.name
+      });
+      
+      workout.tags.push(tag);
+
+      if (tag.type.indexOf('Document') !== -1) {
+        workout.tags.sort((a: TagItem, b: TagItem) => {
+          return a.start - b.start;
+        });
+        
+        for (let i = 0; i < this.state.workout.tags.length; i++) {
+          workout.tags[i].type = `Document ${i+1}`;
+          workout.tags[i].label = `Document ${i+1}`;
+        }
+      }
 
       this.setState({
         tmp_start: null,
@@ -417,12 +386,7 @@ export class ProjectTagComponent extends React.Component<any> {
 
   save = (): any => {
     const {
-      workout: {
-        clasification,
-        clasification: { subclasifications, subclasification },
-        documents,
-        tags
-      }
+      workout: { clasification, documents, tags }
     } = this.state;
     let type = this.state.project.clasification_type;
 
@@ -434,7 +398,11 @@ export class ProjectTagComponent extends React.Component<any> {
         return;
       }
 
-      if (subclasifications && !subclasification) {
+      if (
+        clasification &&
+        clasification.subclasifications &&
+        !clasification.subclasification
+      ) {
         message.warning(
           'Debe identificar la subclasificación del texto antes de guardar'
         );
@@ -505,13 +473,28 @@ export class ProjectTagComponent extends React.Component<any> {
       );
     });
     let workout = this.state.workout;
-    workout.tags.splice(this.state.workout.tags.indexOf(target));
+    workout.tags.splice(this.state.workout.tags.indexOf(target), 1);
     // Clean if no have more tags
     if (workout.tags.length === 0) {
       workout.documents = false;
     }
+
+    if (target.type.indexOf('Document') !== -1) {
+      for (let i = 0; i < this.state.workout.tags.length; i++) {
+        this.state.workout.tags[i].type = `Document ${i + 1}`;
+        this.state.workout.tags[i].label = `Document ${i + 1}`;
+      }
+    }
+
     this.setState({
       workout: workout
+    });
+  }
+
+  selectText(start: number, end: number): void {
+    this.setState({
+      tmp_start: start,
+      tmp_end: end
     });
   }
 
@@ -535,6 +518,7 @@ export class ProjectTagComponent extends React.Component<any> {
                 ents={this.getEntitiesCat()}
                 spans={this.state.workout.tags}
                 delete={this.deleteTag.bind(this)}
+                select={this.selectText.bind(this)}
               />
             </div>
             <div className="label">
@@ -570,6 +554,7 @@ export class ProjectTagComponent extends React.Component<any> {
   }
 
   static getDerivedStateFromProps(props: any, state: any) {
+    if (state.project !== null && state.workout !== null) return state
     state.project = props.project;
     state.workout = props.workout;
     return state;
