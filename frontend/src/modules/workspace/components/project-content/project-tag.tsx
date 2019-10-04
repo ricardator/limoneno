@@ -371,14 +371,20 @@ export class ProjectTagComponent extends React.Component<any> {
   }
 
   getMetadata(): any {
+    const data = Object.keys(this.state.workout.datasetItem.metadata).map(key => {
+      return {
+        key: key,
+        value: this.state.workout.datasetItem.metadata[key]
+      }
+    });
     return (
       <div className="dataset__metadata">
         <Table
-          dataSource={this.state.workout.datasetItem.metadata}
+          dataSource={data}
           className="metadata__table"
         >
           <Table.Column title="Llave" dataIndex="key" key="key" />
-          <Table.Column title="Valor" dataIndex="value" key="email" />
+          <Table.Column title="Valor" dataIndex="value" key="value" />
         </Table>
       </div>
     );
