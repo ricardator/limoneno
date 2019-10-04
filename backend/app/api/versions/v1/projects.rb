@@ -112,33 +112,34 @@ module Versions
             ).includes(:project)
 
             projects_stats = projects.map do |project|
-              tmp = Project.where(id: project.id).includes(:users).first.attributes
+              tmp = Project.where(id: project.project_id).includes(:users).first.attributes
 
               tmp[:assignated] = ProjectDatasetItem.where(
-                project_id: project.id,
+                project_id: project.project_id,
                 user_id: user,
                 status: [0, -1]
               ).count(:id)
 
               tmp[:assignated_done] = ProjectDatasetItem.where(
-                project_id: project.id,
+                project_id: project.project_id,
                 user_id: user,
                 status: 1
               ).count(:id)
 
               tmp[:free_pool_done] = ProjectDatasetItem.where(
-                project_id: project.id,
+                project_id: project.project_id,
                 user_id: user,
                 status: 2
               ).count(:id)
 
               tmp[:free_pool] = Project.where(
-                id: project.id
+                id: project.project_id
               ).joins(:datasets)
               .joins('INNER JOIN dataset_items ON datasets.id = dataset_items.dataset_id')
               .joins(:users)
               .joins('LEFT OUTER JOIN project_dataset_items ON project_dataset_items.project_id = projects.id AND dataset_items.id = project_dataset_items.dataset_item_id')
               .where('project_dataset_items.id IS NULL')
+              .where('dataset_items.status = 1')
               .where("users.id = #{user}")
               .count('datasets.id')
 
@@ -170,6 +171,7 @@ module Versions
                   .joins('LEFT OUTER JOIN project_dataset_items ON project_dataset_items.project_id = projects.id AND dataset_items.id = project_dataset_items.dataset_item_id')
                   .where('project_dataset_items.id IS NULL')
                   .where("users.id = #{params[:user_id]}")
+                  .where('dataset_items.status = 1')
                   .select('dataset_items.id, datasets.id AS dataset')
                   .first
 
