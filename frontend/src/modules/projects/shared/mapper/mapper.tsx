@@ -76,6 +76,7 @@ export class DatasetItemMapperComponent extends React.Component<any> {
           title="Asignar Carga"
           visible={true}
           onCancel={this.close}
+          className="mapper_modal"
           footer={[
             <Button key="mapper" type="primary" onClick={this.action}>
               Asignar
