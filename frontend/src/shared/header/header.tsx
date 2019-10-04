@@ -53,6 +53,24 @@ export class HeaderComponent extends React.Component {
     );
   }
 
+  public showProjects(): any {
+    let user = UserService.getInstance().getUser();
+    if (user && user.admin) {
+      return (
+        <Link to="/projects"><div className="item">Proyectos</div></Link>
+      );
+    }
+  }
+
+  public showDatasets(): any {
+    let user = UserService.getInstance().getUser();
+    if (user && user.admin) {
+      return (
+        <Link to="/datasets"><div className="item">Sets de Documentos</div></Link>
+      );
+    }
+  }
+
   public render() {
     return (
       <div className="header">
@@ -62,8 +80,8 @@ export class HeaderComponent extends React.Component {
           <div className="sections">
             {/* <Link to="/dashboard"><div className="item">Dashboard</div></Link> */}
             <Link to="/workspace"><div className="item">Espacio de trabajo</div></Link>
-            <Link to="/projects"><div className="item">Proyectos</div></Link>
-            <Link to="/datasets"><div className="item">Sets de Documentos</div></Link>
+            {this.showProjects()}
+            {this.showDatasets()}
           </div>
           <div className="menu">
           <Dropdown overlay={this.menu()}>
