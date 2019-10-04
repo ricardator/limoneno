@@ -30,6 +30,21 @@ export default class DatasetService {
     });
   }
 
+  public getActiveDatasets(): Observable<Dataset[]> {
+    return new Observable<Dataset[]>(observe => {
+      RestService.get('datasets/active').subscribe(response => {
+        this.datasets = response.data.map((dataset: any) => {
+          return new Dataset(dataset);
+        });
+        observe.next(this.datasets);
+        observe.complete();
+      }, error => {
+        observe.error(error);
+        observe.complete();
+      });
+    });
+  }
+
   public getDataset(id: number): Observable<Dataset> {
     return new Observable<Dataset>(observe => {
       RestService.get(`datasets/${id}`).subscribe(response => {

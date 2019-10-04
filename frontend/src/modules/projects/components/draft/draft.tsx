@@ -21,7 +21,7 @@ import {
   editProject
 } from '../../../../actions/doprojects';
 import { getUsers } from '../../../../actions/dousers';
-import { getDatasets } from '../../../../actions/dodatasets';
+import { getActiveDatasets } from '../../../../actions/dodatasets';
 import { Project } from '../../../../models/project';
 import { Dataset } from '../../../../models/dataset';
 import { Entity } from '../../../../models/entity';
@@ -47,14 +47,14 @@ export class DraftProjectComponent extends React.Component<any> {
 
   componentDidMount() {
     const {
-      getDatasets,
+      getActiveDatasets,
       getUsers,
       match: {
         params: { id }
       }
     } = this.props;
 
-    getDatasets();
+    getActiveDatasets();
     getUsers();
     if (id) {
       this.props.getProject(id);
@@ -621,7 +621,7 @@ export class DraftProjectComponent extends React.Component<any> {
 // Configure React-redux store functions
 function mapStateToProps(state: any) {
   return {
-    datasets: state.dataset.list,
+    datasets: state.dataset.activeList,
     users: state.user.list,
     project: state.project.project
   };
@@ -633,7 +633,7 @@ function matchDispatchToProps(dispatch: any) {
       setProject,
       destroyProject,
       editProject,
-      getDatasets,
+      getActiveDatasets,
       getUsers,
       getProject
     },
