@@ -4,6 +4,7 @@ import DatasetService from '../services/datasets/datasets.service';
 // Declare the type actions constants
 export const SET_TMP_DATATSET = "SET_TMP_DATATSET";
 export const UPDATE_DATASETS = "UPDATE_DATASETS";
+export const UPDATE_ACTIVE_DATASETS = "UPDATE_ACTIVE_DATASETS";
 export const UPDATE_DATASET_ITEMS = "UPDATE_DATASET_ITEMS";
 
 export const setDataset = (dataset: Dataset) => {
@@ -21,6 +22,17 @@ export const getDatasets = (dataset: Dataset) => {
       dispatch({
         payload: data,
         type: UPDATE_DATASETS
+      });
+    });
+  }
+};
+
+export const getActiveDatasets = (dataset: Dataset) => {
+  return (dispatch: any, getState: any) => {
+    DatasetService.getInstance().getActiveDatasets().subscribe(data => {
+      dispatch({
+        payload: data,
+        type: UPDATE_ACTIVE_DATASETS
       });
     });
   }

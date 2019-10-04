@@ -53,9 +53,18 @@ module Versions
 
       get do
         Dataset
-        .joins(:dataset_items)
-        .group("dataset_items.dataset_id")
+        .left_outer_joins(:dataset_items)
+        .group("datasets.id")
         .select("datasets.*, COUNT(dataset_items.dataset_id) AS items_count")
+        .all
+      end
+      
+      get 'active'do
+        Dataset
+        .left_outer_joins(:dataset_items)
+        .group("datasets.id")
+        .select("datasets.*, COUNT(dataset_items.dataset_id) AS items_count")
+        .where("dataset_items.status = 1")
         .all
       end
 
