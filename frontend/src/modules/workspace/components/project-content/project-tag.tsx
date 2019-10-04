@@ -371,7 +371,8 @@ export class ProjectTagComponent extends React.Component<any> {
   }
 
   getMetadata(): any {
-    const data = Object.keys(this.state.workout.datasetItem.metadata).map(key => {
+    const data = Object.keys(this.state.workout.datasetItem.metadata)
+    .map(key => {
       return {
         key: key,
         value: this.state.workout.datasetItem.metadata[key]
@@ -407,6 +408,7 @@ export class ProjectTagComponent extends React.Component<any> {
       if (
         clasification &&
         clasification.subclasifications &&
+        clasification.subclasifications.length > 0 &&
         !clasification.subclasification
       ) {
         message.warning(
@@ -505,7 +507,17 @@ export class ProjectTagComponent extends React.Component<any> {
   }
 
   getWorkout(): any {
-    if (this.state.project && this.state.workout) {
+    if (this.props.noWorkouts) {
+      return (
+        <div className="empty">
+          <Empty
+            description={
+              <span>No hay trabajos disponibles en este proyecto</span>
+            }
+          />
+        </div>
+      );
+    } else if (this.state.project && this.state.workout) {
       return (
         <div className="clasificator">
           {this.getSidebar()}
@@ -539,16 +551,6 @@ export class ProjectTagComponent extends React.Component<any> {
           </div>
         </div>
       );
-    } else if (this.props.noWorkouts) {
-      return (
-        <div className="empty">
-          <Empty
-            description={
-              <span>No hay trabajos disponibles en este proyecto</span>
-            }
-          />
-        </div>
-      );
     } else {
       return (
         <div className="empty">
@@ -560,9 +562,13 @@ export class ProjectTagComponent extends React.Component<any> {
   }
 
   static getDerivedStateFromProps(props: any, state: any) {
-    if (state.project !== null && state.workout !== null) return state
-    state.project = props.project;
-    state.workout = props.workout;
+    const { project, workout } = state;
+    if ((!project || !workout) || 
+    ((project !== null || workout !== null) &&
+    (project.id !== props.project.id || workout.id !== props.workout.id))) {
+      state.project = props.project;
+      state.workout = props.workout;
+    }
     return state;
   }
 
