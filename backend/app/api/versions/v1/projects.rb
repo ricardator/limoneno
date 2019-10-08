@@ -112,33 +112,34 @@ module Versions
             ).includes(:project)
 
             projects_stats = projects.map do |project|
-              tmp = Project.where(id: project.id).includes(:users).first.attributes
+              tmp = Project.where(id: project.project_id).includes(:users).first.attributes
 
               tmp[:assignated] = ProjectDatasetItem.where(
-                project_id: project.id,
+                project_id: project.project_id,
                 user_id: user,
                 status: [0, -1]
               ).count(:id)
 
               tmp[:assignated_done] = ProjectDatasetItem.where(
-                project_id: project.id,
+                project_id: project.project_id,
                 user_id: user,
                 status: 1
               ).count(:id)
 
               tmp[:free_pool_done] = ProjectDatasetItem.where(
-                project_id: project.id,
+                project_id: project.project_id,
                 user_id: user,
                 status: 2
               ).count(:id)
 
               tmp[:free_pool] = Project.where(
-                id: project.id
+                id: project.project_id
               ).joins(:datasets)
               .joins('INNER JOIN dataset_items ON datasets.id = dataset_items.dataset_id')
               .joins(:users)
               .joins('LEFT OUTER JOIN project_dataset_items ON project_dataset_items.project_id = projects.id AND dataset_items.id = project_dataset_items.dataset_item_id')
               .where('project_dataset_items.id IS NULL')
+              .where('dataset_items.status = 1')
               .where("users.id = #{user}")
               .count('datasets.id')
 
@@ -170,6 +171,7 @@ module Versions
                   .joins('LEFT OUTER JOIN project_dataset_items ON project_dataset_items.project_id = projects.id AND dataset_items.id = project_dataset_items.dataset_item_id')
                   .where('project_dataset_items.id IS NULL')
                   .where("users.id = #{params[:user_id]}")
+                  .where('dataset_items.status = 1')
                   .select('dataset_items.id, datasets.id AS dataset')
                   .first
 
@@ -196,13 +198,44 @@ module Versions
 
               patch ':id' do
                 id = params[:id]
+                tags = params[:tags]
 
-                clasification = ProjectDatasetItem.update(id,
-                                                          clasification: params[:clasification],
-                                                          tags: params[:tags].to_json,
-                                                          status: params[:status] == -1 ? 2 : 1)
+                clasification = ProjectDatasetItem.update(id, {
+                  clasification: params[:clasification],
+                  tags: params[:tags].to_json,
+                  status: (params[:status] == -1) ? 2 : 1,
+                  documents: params[:documents]
+                })
 
-                clasification.status = 2
+                if params[:documents]
+                  dataset = DatasetItem.where({
+                    id: params[:datasetItem][:id]
+                  }).first
+                  tags.each do |document|
+                    document = dataset[:text][document[:start], document[:end]]
+                    # Creamos el dataset
+                    item = DatasetItem.create({
+                      text: document,
+                      dataset_id: dataset[:dataset_id],
+                      name: dataset[:name],
+                      mime: dataset[:mime],
+                      metadata: dataset[:metadata],
+                      url: dataset[:url],
+                      status: dataset[:status]
+                    })
+                    # Asignamos el nuevo documento al usuario
+                    ProjectDatasetItem.create({
+                      user_id: params[:user_id],
+                      project_id: params[:project_id],
+                      clasification: params[:clasification],
+                      status: -1,
+                      dataset_id: dataset[:dataset_id],
+                      dataset_item_id: item.id
+                    })
+                  end
+                end
+
+                clasification.status = 2;
 
                 status 200
                 clasification
