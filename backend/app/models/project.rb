@@ -17,7 +17,7 @@ class Project < ApplicationRecord
     tmp[:datasets] = project.datasets
     tmp[:users] = project.users
 
-    project_dataset_items = ProjectDatasetItem.where(project_id: id).to_a
+    project_dataset_items = ProjectDatasetItem.where(project_id: id, status: 1).to_a
 
     tmp[:assignated] = project_dataset_items.count { |item| item.status.zero? || item.status == 1 }
     tmp[:assignated_done] = project_dataset_items.count { |item| item.status == 1 }
@@ -33,6 +33,7 @@ class Project < ApplicationRecord
            .joins('INNER JOIN dataset_items ON datasets.id = dataset_items.dataset_id')
            .joins('LEFT OUTER JOIN project_dataset_items ON project_dataset_items.project_id = projects.id AND dataset_items.id = project_dataset_items.dataset_item_id')
            .where('project_dataset_items.id IS NULL')
+           .where('dataset_items.status = 1')
            .select('dataset_items.id, datasets.id AS dataset').to_a
   end
 end

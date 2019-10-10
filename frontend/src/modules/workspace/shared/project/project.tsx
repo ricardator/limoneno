@@ -30,7 +30,7 @@ export class ProjectComponent extends React.Component<any> {
   public progress(): number {
     if (this.done() > 0) {
       let divisor = (this.total()) ? this.total() : 1;
-      return this.done() / divisor * 100
+      return Math.floor(this.done() / divisor * 100)
     } else {
       return 0;
     } 
