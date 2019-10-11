@@ -71,6 +71,13 @@ export class HeaderComponent extends React.Component {
     }
   }
 
+  public goToHelp(): void {
+    const win = window.open('https://help.limoneno.lemontech.com', '_blank');
+    if (win) {
+      win.focus();
+    }
+  }
+
   public render() {
     return (
       <div className="header">
@@ -83,13 +90,14 @@ export class HeaderComponent extends React.Component {
             {this.showProjects()}
             {this.showDatasets()}
           </div>
+          <div className="help" onClick={this.goToHelp.bind(this)}>Centro de ayuda</div>
           <div className="menu">
-          <Dropdown overlay={this.menu()}>
-            <div className="h2">
-              <Icon className="icon" type="user" />
-              <Icon className="icon" type="down" />
-            </div>
-          </Dropdown>
+            <Dropdown overlay={this.menu()}>
+              <div className="h2">
+                <Icon className="icon" type="user" />
+                <Icon className="icon" type="down" />
+              </div>
+            </Dropdown>
           </div>
       </div>
     )
