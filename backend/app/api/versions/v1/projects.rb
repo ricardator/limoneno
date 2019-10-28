@@ -22,8 +22,8 @@ module Versions
           name: params[:name],
           description: params[:description],
           clasification_type: params[:clasification_type],
-          entities: params[:entities].to_json,
-          clasifications: params[:clasifications].to_json,
+          entities: params[:entities],
+          clasifications: params[:clasifications],
           datasets: datasets,
           users: users,
           status: 1
@@ -53,8 +53,8 @@ module Versions
                        name: params[:name],
                        description: params[:description],
                        clasification_type: params[:clasification_type],
-                       entities: params[:entities].to_json,
-                       clasifications: params[:clasifications].to_json,
+                       entities: params[:entities],
+                       clasifications: params[:clasifications],
                        datasets: datasets,
                        users: users,
                        status: 1)
@@ -202,7 +202,7 @@ module Versions
 
                 clasification = ProjectDatasetItem.update(id, {
                   clasification: params[:clasification],
-                  tags: params[:tags].to_json,
+                  tags: params[:tags],
                   status: (params[:status] == -1) ? 2 : 1,
                   documents: params[:documents]
                 })
