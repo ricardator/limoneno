@@ -430,7 +430,7 @@ export class ProjectTagComponent extends React.Component<any> {
 
     const editedTags = tags.map((tag: DatasetItemTag) => {
       delete tag.label;
-      tag.type = documents ? tag.type : 'Document';
+      tag.type = documents ? 'Document' : tag.type;
       return tag;
     });
     const editedWorkout = { ...this.state.workout, tags: editedTags };
