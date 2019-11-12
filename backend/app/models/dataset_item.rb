@@ -10,10 +10,10 @@ class DatasetItem < ApplicationRecord
   belongs_to :dataset
   has_many :project_dataset_items
 
-  before_save :clean_text, if: :text_changed?
+  before_save :clean_text, if: :raw_text_changed?
 
   def clean_text
-    self.text = text.gsub(/\n+/, LINE_BREAK_REP).squish
-                    .gsub(Regexp.new(" ?#{LINE_BREAK_REP}( #{LINE_BREAK_REP})* ?"), "\n").strip
+    self.text = raw_text.gsub(/\n+/, LINE_BREAK_REP).squish
+                        .gsub(Regexp.new(" ?#{LINE_BREAK_REP}( #{LINE_BREAK_REP})* ?"), "\n").strip
   end
 end
