@@ -1,5 +1,5 @@
 class ProjectDatasetItem < ApplicationRecord
-  serialize :tags, JSON
+#  serialize :tags, JSON
 
   belongs_to :project
   belongs_to :user
@@ -7,7 +7,7 @@ class ProjectDatasetItem < ApplicationRecord
   belongs_to :dataset_item
 
   def self.create_users_pool(users_pool, project_id)
-    free_pool = Project.free_pool(project_id)
+    free_pool = Project.find(project_id).free_pool.pluck(:id, :dataset_id)
     users_pool.each do |user_id, pool|
       user_pool = free_pool.shift(pool)
       user_pool.each do |item|
