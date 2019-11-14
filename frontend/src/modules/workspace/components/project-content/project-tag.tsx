@@ -481,7 +481,6 @@ export class ProjectTagComponent extends React.Component<any> {
     let target = this.state.workout.tags.find((item: any) => {
       return (
         tag.start === item.start &&
-        tag.end === item.end &&
         tag.type === item.type
       );
     });
@@ -525,9 +524,14 @@ export class ProjectTagComponent extends React.Component<any> {
 
     this.setState({
       tmp_start: start,
-      tmp_end: end + 1,
+      tmp_end: end,
       tmp_text: s.substr(start, end - start + 1)
     });
+  }
+
+  // Taggy needs the cursor position for the end, but we save the character position (1 less)
+  getTaggyTags(): any {
+    return this.state.workout.tags.map((tag: DatasetItemTag) => ({...tag, end: tag.end + 1}))
   }
 
   getWorkout(): any {
@@ -558,7 +562,7 @@ export class ProjectTagComponent extends React.Component<any> {
                 className="tags"
                 text={this.state.workout.datasetItem.text}
                 ents={this.getEntitiesCat()}
-                spans={this.state.workout.tags}
+                spans={this.getTaggyTags()}
                 delete={this.deleteTag.bind(this)}
                 select={this.selectText.bind(this)}
               />
