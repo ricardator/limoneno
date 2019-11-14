@@ -39,6 +39,7 @@ export class ProjectTagComponent extends React.Component<any> {
     workout: null,
     tmp_start: null,
     tmp_end: null,
+    tmp_text: null,
     entities: [],
     saving: false
   };
@@ -231,21 +232,22 @@ export class ProjectTagComponent extends React.Component<any> {
     if (this.state.tmp_start !== null && this.state.tmp_end) {
       let workout = this.state.workout;
       workout.documents = document;
-      
+
       const tag = new DatasetItemTag({
         start: this.state.tmp_start,
         end: this.state.tmp_end,
+        text: this.state.tmp_text,
         type: entity.tag,
         label: entity.name
       });
-      
+
       workout.tags.push(tag);
 
       if (tag.type.indexOf('Document') !== -1) {
         workout.tags.sort((a: TagItem, b: TagItem) => {
           return a.start - b.start;
         });
-        
+
         for (let i = 0; i < this.state.workout.tags.length; i++) {
           workout.tags[i].type = `Document ${i+1}`;
           workout.tags[i].label = `Document ${i+1}`;
@@ -255,6 +257,7 @@ export class ProjectTagComponent extends React.Component<any> {
       this.setState({
         tmp_start: null,
         tmp_end: null,
+        tmp_text: null,
         workout: workout
       });
     } else {
@@ -457,6 +460,7 @@ export class ProjectTagComponent extends React.Component<any> {
                 workout: null,
                 tmp_start: null,
                 tmp_end: null,
+                tmp_text: null,
                 entities: [],
                 saving: false
               });
@@ -501,9 +505,28 @@ export class ProjectTagComponent extends React.Component<any> {
   }
 
   selectText(start: number, end: number): void {
+    end--;
+    if(start > end) return;
+
+    let s = this.state.workout.datasetItem.text;
+
+    // word characters
+    let r = /[\wáéíóúüñ]/i;
+
+    // starts in a non-word character, move forward to the start of a word
+    while(start < end && !s[start].match(r)) start++;
+    // starts in the middle of a word, move back to the start of that word
+    while(start > 0 && s[start].match(r) && s[start - 1].match(r)) start--;
+
+    // ends in a non-word character, move back to the end of a word
+    while(end > start && !s[end].match(r)) end--;
+    // ends in the middle of a word, move forward to the end of that word
+    while(end < s.length - 1 && s[end].match(r) && s[end + 1].match(r)) end++;
+
     this.setState({
       tmp_start: start,
-      tmp_end: end
+      tmp_end: end + 1,
+      tmp_text: s.substr(start, end - start + 1)
     });
   }
 
@@ -564,7 +587,7 @@ export class ProjectTagComponent extends React.Component<any> {
 
   static getDerivedStateFromProps(props: any, state: any) {
     const { project, workout } = state;
-    if ((!project || !workout) || 
+    if ((!project || !workout) ||
     ((project !== null || workout !== null) &&
     (project.id !== props.project.id || workout.id !== props.workout.id))) {
       state.project = props.project;
