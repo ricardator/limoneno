@@ -1,7 +1,10 @@
 version: '3.0'
 services:
-  mariadb:
-    image: mysql
+  mysql:
+    image: mysql-limoneno
+    build:
+      context: ./.docker
+      dockerfile: mysql.Dockerfile
     container_name: limoneno-database-develop
     volumes:
       - limoneno-database-develop:/var/lib/mysql
@@ -16,9 +19,9 @@ services:
     image: phpmyadmin/phpmyadmin
     container_name: limoneno-phpmyadmin-develop
     environment:
-      PMA_HOST:  26.0.0.2
+      PMA_HOST: mysql
     links:
-      - "mariadb:mysql"
+      - "mysql:mysql"
     ports:
       - 7000:80
     networks:
