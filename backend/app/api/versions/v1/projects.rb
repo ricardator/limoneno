@@ -132,16 +132,7 @@ module Versions
                 status: 2
               ).count(:id)
 
-              tmp[:free_pool] = Project.where(
-                id: project.project_id
-              ).joins(:datasets)
-              .joins('INNER JOIN dataset_items ON datasets.id = dataset_items.dataset_id')
-              .joins(:users)
-              .joins('LEFT OUTER JOIN project_dataset_items ON project_dataset_items.project_id = projects.id AND dataset_items.id = project_dataset_items.dataset_item_id')
-              .where('project_dataset_items.id IS NULL')
-              .where('dataset_items.status = 1')
-              .where("users.id = #{user}")
-              .count('datasets.id')
+              tmp[:free_pool] = project.project.free_pool(user).count(:dataset_id)
 
               tmp
             end
@@ -163,25 +154,15 @@ module Versions
                   status 200
                   return assignated.as_json(include: %i[dataset dataset_item])
                 else
-                  free_pool = Project.where(
-                    id: params[:project_id]
-                  ).joins(:datasets)
-                  .joins('INNER JOIN dataset_items ON datasets.id = dataset_items.dataset_id')
-                  .joins(:users)
-                  .joins('LEFT OUTER JOIN project_dataset_items ON project_dataset_items.project_id = projects.id AND dataset_items.id = project_dataset_items.dataset_item_id')
-                  .where('project_dataset_items.id IS NULL')
-                  .where("users.id = #{params[:user_id]}")
-                  .where('dataset_items.status = 1')
-                  .select('dataset_items.id, datasets.id AS dataset')
-                  .first
+                  free_item = Project.find(params[:project_id]).free_pool(params[:user_id]).first
 
-                  if free_pool
+                  if free_item
                     created = ProjectDatasetItem.create(
                       user_id: params[:user_id],
                       project_id: params[:project_id],
                       status: -1,
-                      dataset_id: free_pool.dataset,
-                      dataset_item_id: free_pool.id
+                      dataset_id: free_item.dataset_id,
+                      dataset_item_id: free_item.id
                     )
 
                     assignated = ProjectDatasetItem.where(
