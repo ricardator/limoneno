@@ -1,7 +1,4 @@
 class ProjectDatasetItem < ApplicationRecord
-  serialize :tags, JSON
-  serialize :clasification, JSON
-
   belongs_to :project
   belongs_to :user
   belongs_to :dataset
