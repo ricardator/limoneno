@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   mariadb:
-    image: mariadb
+    image: mysql
     container_name: limoneno-database-develop
     volumes:
       - limoneno-database-develop:/var/lib/mysql
