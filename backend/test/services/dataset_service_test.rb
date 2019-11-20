@@ -89,7 +89,6 @@ class DatasetServiceTest < Minitest::Test
         name: 'sample_txt.txt',
         dataset_id: 1,
         mime: 'text/plain',
-        raw_text: 'Lorem ipsum dolor sit amet',
         text: 'Lorem ipsum dolor sit amet',
         url: nil,
         status: 'active'
