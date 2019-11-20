@@ -43,6 +43,7 @@ class DatasetServiceTest < Minitest::Test
         name: 'sample_file.pdf',
         dataset_id: 1,
         mime: 'application/pdf',
+        raw_text: nil,
         text: nil,
         url: 'https://limoneno.s3.amazonaws.com/datasets/1/items/RANDOM_UUID/sample_file.pdf',
         status: 'loading',
@@ -89,6 +90,7 @@ class DatasetServiceTest < Minitest::Test
         name: 'sample_txt.txt',
         dataset_id: 1,
         mime: 'text/plain',
+        raw_text: 'Lorem ipsum dolor sit amet',
         text: 'Lorem ipsum dolor sit amet',
         url: nil,
         status: 'active'
@@ -116,7 +118,7 @@ class DatasetServiceTest < Minitest::Test
   end
 
   def self.result(item)
-    data = item.slice(:name, :dataset_id, :mime, :text, :url, :status).symbolize_keys
+    data = item.slice(:name, :dataset_id, :mime, :raw_text, :text, :url, :status).symbolize_keys
     regexp_uuid = /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/
     data[:url] = data[:url]&.sub(regexp_uuid, 'RANDOM_UUID')
     data
