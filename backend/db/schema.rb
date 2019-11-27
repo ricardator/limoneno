@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_24_202014) do
+ActiveRecord::Schema.define(version: 2019_11_12_201442) do
 
   create_table "dataset_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "dataset_id"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 2019_09_24_202014) do
     t.boolean "stored"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "raw_text"
   end
 
   create_table "datasets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

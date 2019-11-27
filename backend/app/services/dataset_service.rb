@@ -20,7 +20,7 @@ module DatasetService
              when 'application/pdf' then MidasService::MidasClient.get_remote_file_text(item.url)
              when 'text/plain' then URI.open(item.url).read
              end
-      item.update(text: text, status: :active)
+      item.update(raw_text: text, status: :active)
     rescue
       item&.update(status: :error)
     end
@@ -33,7 +33,7 @@ module DatasetService
       item = {
         dataset_id: params[:dataset_id],
         name: params[:name],
-        text: nil,
+        raw_text: nil,
         mime: params[:mime],
         metadata: params[:metadata],
         url: params[:url],
@@ -59,7 +59,7 @@ module DatasetService
 
     def self.upload_txt(params)
       create_item(params) do |item|
-        item[:text] = Base64.decode64(params[:data])
+        item[:raw_text] = Base64.decode64(params[:data])
         item[:status] = :active
       end
     end

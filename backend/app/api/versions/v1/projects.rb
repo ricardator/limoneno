@@ -196,7 +196,7 @@ module Versions
                     document = dataset[:text][document[:start], document[:end]]
                     # Creamos el dataset
                     item = DatasetItem.create({
-                      text: document,
+                      raw_text: document,
                       dataset_id: dataset[:dataset_id],
                       name: dataset[:name],
                       mime: dataset[:mime],

@@ -33,7 +33,7 @@ module Versions
               dataset_id: dataset_id,
               name: params[:name],
               mime: params[:mime],
-              text: params[:text],
+              raw_text: params[:text],
               metadata: params[:metadata],
               url: params[:url]
           })
