@@ -181,21 +181,19 @@ module Versions
                 id = params[:id]
                 tags = params[:tags]
 
-                clasification = ProjectDatasetItem.update(id, {
-                  clasification: params[:clasification],
-                  tags: params[:tags],
-                  status: (params[:status] == -1) ? 2 : 1,
-                  documents: params[:documents]
-                })
+                clasification = ProjectDatasetItem.update(id,
+                                                          clasification: params[:clasification],
+                                                          tags: params[:tags],
+                                                          status: params[:status] == -1 ? 2 : 1,
+                                                          documents: params[:documents])
 
+                # True if "multiples actuaciones"
                 if params[:documents]
-                  dataset = DatasetItem.where({
-                    id: params[:datasetItem][:id]
-                  }).first
+                  dataset = DatasetItem.find_by(id: params[:datasetItem][:id])
                   tags.each do |document|
                     document = dataset[:text][document[:start], document[:end]]
                     # Creamos el dataset
-                    item = DatasetItem.create({
+                    item = DatasetItem.create(
                       raw_text: document,
                       dataset_id: dataset[:dataset_id],
                       name: dataset[:name],
@@ -203,20 +201,20 @@ module Versions
                       metadata: dataset[:metadata],
                       url: dataset[:url],
                       status: dataset[:status]
-                    })
+                    )
                     # Asignamos el nuevo documento al usuario
-                    ProjectDatasetItem.create({
+                    ProjectDatasetItem.create(
                       user_id: params[:user_id],
                       project_id: params[:project_id],
                       clasification: params[:clasification],
                       status: -1,
                       dataset_id: dataset[:dataset_id],
                       dataset_item_id: item.id
-                    })
+                    )
                   end
                 end
 
-                clasification.status = 2;
+                clasification.status = 2
 
                 status 200
                 clasification
