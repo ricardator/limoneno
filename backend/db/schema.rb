@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 2019_11_12_201442) do
     t.string "name"
     t.string "mime"
     t.text "text"
-    t.text "metadata", size: :long, collation: "utf8mb4_bin"
+    t.json "metadata"
     t.text "url"
     t.integer "status"
     t.boolean "stored"
@@ -38,12 +38,12 @@ ActiveRecord::Schema.define(version: 2019_11_12_201442) do
     t.integer "user_id"
     t.integer "dataset_id"
     t.integer "dataset_item_id"
-    t.text "clasification", size: :long, collation: "utf8mb4_bin"
-    t.text "tags", size: :long, collation: "utf8mb4_bin"
+    t.json "clasification"
+    t.json "tags"
     t.integer "status"
-    t.boolean "documents"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "documents"
   end
 
   create_table "project_datasets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -66,8 +66,8 @@ ActiveRecord::Schema.define(version: 2019_11_12_201442) do
     t.string "name"
     t.string "description"
     t.integer "clasification_type"
-    t.text "entities", size: :long, collation: "utf8mb4_bin"
-    t.text "clasifications", size: :long, collation: "utf8mb4_bin"
+    t.json "entities"
+    t.json "clasifications"
     t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
