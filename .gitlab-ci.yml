@@ -1,0 +1,21 @@
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules
+
+stages:
+  - build
+  - test
+  - package
+  - deploy
+
+build:
+  image: docker
+  stage: build
+  script:
+    - sudo apt-get install software-properties-common
+    - sudo apt-add-repository -y ppa:rael-gc/rvm
+    - sudo apt-get update
+    - sudo apt-get install rvm
+    - rvm install ruby-2.6.3
+    
