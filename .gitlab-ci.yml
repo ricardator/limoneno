@@ -14,7 +14,7 @@ build:
   stage: build
   script:
     - apt update -y
-    - apt-get install software-properties-common
+    - apt-get install software-properties-common -y
     - apt-add-repository -y ppa:rael-gc/rvm
     - apt-get update
     - apt-get install rvm
