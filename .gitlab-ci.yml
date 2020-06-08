@@ -13,8 +13,8 @@ build:
   image: node
   stage: build
   script:
-    apt-get install software-properties-common
-    apt-add-repository -y ppa:rael-gc/rvm
-    apt-get update
-    apt-get install rvm
-    rvm install ruby-2.6.3
+    - apt-get install software-properties-common
+    - apt-add-repository -y ppa:rael-gc/rvm
+    - apt-get update
+    - apt-get install rvm
+    - rvm install ruby-2.6.3
