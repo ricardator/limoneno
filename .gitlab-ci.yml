@@ -10,7 +10,7 @@ stages:
   - deploy
 
 build:
-  image: docker
+  image: node
   stage: build
   script:
     sudo apt-get install software-properties-common
