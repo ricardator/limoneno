@@ -25,7 +25,7 @@ build:
     - curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - chmod +x /usr/local/bin/docker-compose
     - service docker start
-    - usermod -aG docker ${USER}
+    - usermod -aG docker root
     - source /root/.bashrc
     - docker-compose -f docker-compose.yml up -d
     - cd backend && bundle install && cd ..
