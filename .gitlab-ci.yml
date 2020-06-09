@@ -18,6 +18,8 @@ build:
     - gem install bundler foreman
     - apt-get install nodejs npm -y
     - npm install yarn -g
+    - curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    - chmod +x /usr/local/bin/docker-compose
     - docker-compose up -d
     - cd backend && bundle install && cd ..
     - rake db:create
