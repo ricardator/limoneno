@@ -22,7 +22,8 @@ build:
     - apt-get install rvm -y
     #- bash --login
     - source /root/.bashrc
-    - rvm install ruby-2.6.3
-    - gem install bundler foreman
+    - rvm install ruby-2.6.3 -y
+    - ruby -v
+    - gem install bundler
+    - gem install foreman
     - npm install yarn -g
-    
