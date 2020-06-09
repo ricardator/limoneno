@@ -23,3 +23,6 @@ build:
     #- bash --login
     - source /root/.bashrc
     - rvm install ruby-2.6.3
+    - gem install bundler foreman
+    - npm install yarn -g
+    
