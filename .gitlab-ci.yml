@@ -20,5 +20,6 @@ build:
     - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7BE3E5681146FD4F1A40EDA28094BB14F4E3FBBE
     - apt update -y
     - apt-get install rvm -y
-    - bash --login
+    #- bash --login
+    - source /root/.bashrc
     - rvm install ruby-2.6.3
