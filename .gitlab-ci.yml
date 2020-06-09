@@ -28,9 +28,10 @@ build:
     - usermod -aG docker root
     - source /root/.bashrc
     - docker-compose -f docker-compose.yml up -d
-    - cd backend && bundle install && cd ..
+    - cd backend && bundle install
     - rake db:create
     - rake db:migrate
     - rake db:seed
     - foreman start &
+    - cd ..
     - cd frontend && yarn start
