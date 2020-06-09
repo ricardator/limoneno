@@ -23,6 +23,7 @@ build:
     #- bash --login
     - source /root/.bashrc
     - rvm install ruby-2.6.3
+    - sleep 15
     - ruby -v
     - gem install bundler
     - gem install foreman
