@@ -10,21 +10,17 @@ stages:
   - deploy
 
 build:
-  image: node
+  image: ruby:2.6
   stage: build
   script:
-    - apt update -y
-    - apt-get install software-properties-common -y
-#    - apt-add-repository -y ppa:rael-gc/rvm
-    - add-apt-repository 'deb http://ppa.launchpad.net/rael-gc/rvm/ubuntu disco main'
-    - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7BE3E5681146FD4F1A40EDA28094BB14F4E3FBBE
-    - apt update -y
-    - apt-get install rvm -y
-    #- bash --login
-    - source /root/.bashrc
-    - rvm install ruby-2.6.3
-    - /bin/bash --login
-    - rvm use 2.6.3
-    - gem install bundler
-    - gem install foreman
+    - apt-get install -y docker
+    - gem install bundler foreman
+    - apt-get install nodejs npm
     - npm install yarn -g
+    - docker-compose up -d
+    - cd backend && bundle install && cd ..
+    - rake db:create
+    - rake db:migrate
+    - rake db:seed
+    - foreman start &
+    - cd frontend && yarn start 
