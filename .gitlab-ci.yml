@@ -16,7 +16,7 @@ build:
     - apt update
     - apt-get install -y docker
     - gem install bundler foreman
-    - apt-get install nodejs npm
+    - apt-get install nodejs npm -y
     - npm install yarn -g
     - docker-compose up -d
     - cd backend && bundle install && cd ..
